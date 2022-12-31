@@ -68,28 +68,7 @@ const Timer_A_CaptureModeConfig captureModeConfig =
         TIMER_A_OUTPUTMODE_OUTBITVALUE            // Output bit value
 };
 
-
 // GRAPHICS
-void _buzzerInit()
-{
-    /* Configures P2.7 to PM_TA0.4 for using Timer PWM to control the buzzer */
-    GPIO_setAsPeripheralModuleFunctionOutputPin(GPIO_PORT_P2, GPIO_PIN7,
-    GPIO_PRIMARY_MODULE_FUNCTION);
-
-    /* Configuring Timer_A0 for Up Mode and starting */
-    Timer_A_configureUpMode(TIMER_A1_BASE, &upConfig);
-    Timer_A_startCounter(TIMER_A1_BASE, TIMER_A_UP_MODE);
-
-}
-
-void makeBuzz(){
-    /* Initialize compare registers to generate PWM */
-    Timer_A_initCompare(TIMER_A1_BASE, &compareConfig_PWM); // For P2.7
-
-    __delay_cycles(HZ/2);
-
-    Timer_A_stopTimer(TIMER_A1_BASE);
-}
 
 void _graphicsInit()
 {
@@ -105,6 +84,39 @@ void _graphicsInit()
     Graphics_setBackgroundColor(&g_sContext, GRAPHICS_COLOR_WHITE);
     GrContextFontSet(&g_sContext, &g_sFontFixed6x8);
     Graphics_clearDisplay(&g_sContext);
+
+}
+
+void turnOnBuzzer(){
+    Interrupt_disableInterrupt(INT_TA0_N);
+    Timer_A_stopTimer(TIMER_A0_BASE);
+    /* Configures P2.7 to PM_TA0.4 for using Timer PWM to control the buzzer */
+    GPIO_setAsPeripheralModuleFunctionOutputPin(GPIO_PORT_P2, GPIO_PIN7,
+    GPIO_PRIMARY_MODULE_FUNCTION);
+
+    /* Configuring Timer_A0 for Up Mode and starting */
+    Timer_A_configureUpMode(TIMER_A0_BASE, &upConfig);
+    Timer_A_startCounter(TIMER_A0_BASE, TIMER_A_UP_MODE);
+
+    Timer_A_initCompare(TIMER_A0_BASE, &compareConfig_PWM); // For P2.7
+}
+
+void turnOffBuzzer(){
+    Timer_A_stopTimer(TIMER_A0_BASE);
+
+    GPIO_setAsOutputPin(GPIO_PORT_P2, GPIO_PIN7);
+
+    /* Configuring Capture Mode */
+    Timer_A_initCapture(TIMER_A0_BASE, &captureModeConfig);
+
+
+    /* Configuring Continuous Mode */
+    Timer_A_configureContinuousMode(TIMER_A0_BASE, &continuousModeConfig);
+
+    /* Starting the Timer_A0 in continuous mode */
+    Timer_A_startCounter(TIMER_A0_BASE, TIMER_A_CONTINUOUS_MODE);
+
+    Interrupt_enableInterrupt(INT_TA0_N);
 
 }
 
@@ -129,7 +141,27 @@ void _hwInit()
     CS_initClockSignal(CS_ACLK, CS_REFOCLK_SELECT, CS_CLOCK_DIVIDER_8);
 
     _graphicsInit();
-    _buzzerInit();
+
+    // set pins for Stepper Motor
+    GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN7);
+    GPIO_setAsOutputPin(GPIO_PORT_P5, GPIO_PIN0);
+    GPIO_setAsOutputPin(GPIO_PORT_P5, GPIO_PIN2);
+    GPIO_setAsOutputPin(GPIO_PORT_P3, GPIO_PIN6);
+
+    // set pins for Distance Sensor
+    GPIO_setAsPeripheralModuleFunctionInputPin(GPIO_PORT_P2, GPIO_PIN4,
+                                               GPIO_PRIMARY_MODULE_FUNCTION);
+    GPIO_setAsOutputPin(GPIO_PORT_P5, GPIO_PIN6);
+
+    /* Configuring Capture Mode */
+    Timer_A_initCapture(TIMER_A0_BASE, &captureModeConfig);
+
+    /* Configuring Continuous Mode */
+    Timer_A_configureContinuousMode(TIMER_A0_BASE, &continuousModeConfig);
+
+    /* Enabling interrupts */
+    Interrupt_enableInterrupt(INT_TA0_N);
+    Interrupt_enableMaster();
 
 }
 
@@ -138,7 +170,6 @@ void _hwInit()
  */
 void vTaskStepperMotor(void *pvParameters);
 void vTaskDistanceSensor(void *pvParameters);
-void initPeriph();
 void peopleDetection();
 
 
@@ -180,8 +211,6 @@ int main(void)
 
     //Graphics_drawStringCentered(&g_sContext, (int8_t *) "Buzzer Demo", AUTO_STRING_LENGTH, 64, 30, OPAQUE_TEXT);
 
-    // Initialize Pins and Timers
-    initPeriph();
 
     // Initialize Queue
     int msg;
@@ -217,30 +246,6 @@ int main(void)
     return 0;
 }
 /*-----------------------------------------------------------*/
-
-void initPeriph(){
-
-    // set pins for Stepper Motor
-    GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN7);
-    GPIO_setAsOutputPin(GPIO_PORT_P5, GPIO_PIN0);
-    GPIO_setAsOutputPin(GPIO_PORT_P5, GPIO_PIN2);
-    GPIO_setAsOutputPin(GPIO_PORT_P3, GPIO_PIN6);
-
-    // set pins for Distance Sensor
-    GPIO_setAsPeripheralModuleFunctionInputPin(GPIO_PORT_P2, GPIO_PIN4, GPIO_PRIMARY_MODULE_FUNCTION);
-    GPIO_setAsOutputPin(GPIO_PORT_P5, GPIO_PIN6);
-
-    /* Configuring Capture Mode */
-    Timer_A_initCapture(TIMER_A0_BASE, &captureModeConfig);
-
-    /* Configuring Continuous Mode */
-    Timer_A_configureContinuousMode(TIMER_A0_BASE, &continuousModeConfig);
-
-    /* Enabling interrupts */
-    Interrupt_enableInterrupt(INT_TA0_N);
-    Interrupt_enableMaster();
-
-}
 
 
 int peoplePos[MAX_PLAYERS];
@@ -287,7 +292,7 @@ void vTaskStepperMotor(void *pvParameters)
 
     int degreesToSteps = STEPS_360/(360 / (*((int *)pvParameters)));
 
-    int velocity = 200000;
+    int velocity = 80000;
     while (cont < degreesToSteps)
     {
         GPIO_setOutputHighOnPin(GPIO_PORT_P1, GPIO_PIN7);
@@ -320,20 +325,25 @@ void vTaskStepperMotor(void *pvParameters)
             if(contPeople < 8){
                 peoplePos[contPeople] = cont-1;
                 contPeople++;
-                makeBuzz();
+
+                vTaskSuspend(xTaskXHandle);
+                turnOnBuzzer();
+                vTaskDelay(pdMS_TO_TICKS(30000));
+                turnOffBuzzer();
+                vTaskResume(xTaskXHandle);
             }
         }
     }
 
     vTaskDelete(xTaskXHandle);
 
-    /*
+
     int i;
     printf("STAMPAAAAA \n");
     for(i=0 ; i<contPeople ; i++){
         printf("%d ", peoplePos[i]);
     }
-    printf("\n"); */
+    printf("\n");
 }
 //m1_1_1e//
 
@@ -380,7 +390,7 @@ void vTaskDistanceSensor(void *pvParameters)
                         int msg = 1;
                         xQueueSend(q1, (void *)msg, (portTickType)0);
 
-                        vTaskDelay(pdMS_TO_TICKS(30000));
+                        vTaskDelay(pdMS_TO_TICKS(500));
                     }
                 }else{
                     count = 0;
