@@ -9,6 +9,8 @@
 
 #include "uart.h"
 
+int ciao=0;
+
 #define  HZ   24000000UL    // 24MHz
 #define MAX_QUEUE_SIZE 10
 #define LEN_QUEUE_MEX 20
@@ -79,16 +81,21 @@ void _buzzerInit()
     /* Configuring Timer_A0 for Up Mode and starting */
     Timer_A_configureUpMode(TIMER_A1_BASE, &upConfig);
     Timer_A_startCounter(TIMER_A1_BASE, TIMER_A_UP_MODE);
-
 }
 
+int cacca = 0;
 void makeBuzz(){
     /* Initialize compare registers to generate PWM */
-    Timer_A_initCompare(TIMER_A1_BASE, &compareConfig_PWM); // For P2.7
+    if(cacca = 0){
+        Timer_A_initCompare(TIMER_A1_BASE, &compareConfig_PWM); // For P2.7
+        cacca = 1;
+    }
+    else
+    {
+        Timer_A_stopTimer(TIMER_A1_BASE);
+        cacca = 0;
+    }
 
-    __delay_cycles(HZ/2);
-
-    Timer_A_stopTimer(TIMER_A1_BASE);
 }
 
 void _graphicsInit()
@@ -320,20 +327,25 @@ void vTaskStepperMotor(void *pvParameters)
             if(contPeople < 8){
                 peoplePos[contPeople] = cont-1;
                 contPeople++;
+
                 makeBuzz();
+                vTaskSuspend(xTaskXHandle);
+                vTaskDelay(pdMS_TO_TICKS(300000));
+                makeBuzz();
+                vTaskResume(xTaskXHandle);
             }
         }
     }
 
     vTaskDelete(xTaskXHandle);
 
-    /*
+
     int i;
     printf("STAMPAAAAA \n");
     for(i=0 ; i<contPeople ; i++){
         printf("%d ", peoplePos[i]);
     }
-    printf("\n"); */
+    printf("\n");
 }
 //m1_1_1e//
 

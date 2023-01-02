@@ -29,9 +29,9 @@ ORDERED_OBJS += \
 "./LcdDriver/HAL_MSP_EXP432P401R_Crystalfontz128x128_ST7735.obj" \
 "../msp432p401r_FreeRTOS.cmd" \
 $(GEN_CMDS__FLAG) \
--l"C:/Users/Francesco Olivieri/Documents/simplelink_msp432p4_sdk_3_40_01_02/simplelink_msp432p4_sdk_3_40_01_02/source/ti/devices/msp432p4xx/driverlib/ccs/msp432p4xx_driverlib.lib" \
+-l"C:/Users/eddie/OneDrive/Documenti/simplelink_msp432p4_sdk_3_40_01_02/source/ti/grlib/lib/ccs/m4f/grlib.a" \
+-l"C:/Users/eddie/OneDrive/Documenti/simplelink_msp432p4_sdk_3_40_01_02/source/ti/devices/msp432p4xx/driverlib/ccs/msp432p4xx_driverlib.lib" \
 -llibc.a \
--l"C:/Users/Francesco Olivieri/Documents/simplelink_msp432p4_sdk_3_40_01_02/simplelink_msp432p4_sdk_3_40_01_02/source/ti/grlib/lib/ccs/m4f/grlib.a" \
 
 -include ../makefile.init
 
