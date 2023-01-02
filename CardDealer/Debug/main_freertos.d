@@ -68,6 +68,10 @@ main_freertos.obj: C:/ti/ccs1210/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/includ
 main_freertos.obj: ../LcdDriver/Crystalfontz128x128_ST7735.h
 main_freertos.obj: C:/Users/eddie/OneDrive/Documenti/simplelink_msp432p4_sdk_3_40_01_02/source/ti/grlib/grlib.h
 main_freertos.obj: ../LcdDriver/HAL_MSP_EXP432P401R_Crystalfontz128x128_ST7735.h
+main_freertos.obj: C:/Users/eddie/workspace_v12/Card-Dealer/CardDealer/action.h
+main_freertos.obj: C:/Users/eddie/OneDrive/Documenti/simplelink_msp432p4_sdk_3_40_01_02/source/ti/grlib/grlib.h
+main_freertos.obj: C:/Users/eddie/workspace_v12/Card-Dealer/CardDealer/condition.h
+main_freertos.obj: C:/Users/eddie/OneDrive/Documenti/simplelink_msp432p4_sdk_3_40_01_02/source/ti/grlib/grlib.h
 main_freertos.obj: ../uart.h
 
 ../main_freertos.c:
@@ -205,6 +209,14 @@ C:/ti/ccs1210/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/assert.h:
 C:/Users/eddie/OneDrive/Documenti/simplelink_msp432p4_sdk_3_40_01_02/source/ti/grlib/grlib.h:
 
 ../LcdDriver/HAL_MSP_EXP432P401R_Crystalfontz128x128_ST7735.h:
+
+C:/Users/eddie/workspace_v12/Card-Dealer/CardDealer/action.h:
+
+C:/Users/eddie/OneDrive/Documenti/simplelink_msp432p4_sdk_3_40_01_02/source/ti/grlib/grlib.h:
+
+C:/Users/eddie/workspace_v12/Card-Dealer/CardDealer/condition.h:
+
+C:/Users/eddie/OneDrive/Documenti/simplelink_msp432p4_sdk_3_40_01_02/source/ti/grlib/grlib.h:
 
 ../uart.h:
 

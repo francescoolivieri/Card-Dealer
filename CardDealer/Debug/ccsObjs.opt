@@ -1,5 +1,8 @@
 "./HAL_I2C.obj"
 "./HAL_OPT3001.obj"
+"./action.obj"
+"./condition.obj"
+"./main.obj"
 "./main_freertos.obj"
 "./startup_msp432p401r_FreeRTOS_ccs.obj"
 "./system_msp432p401r.obj"
