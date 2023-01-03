@@ -15,7 +15,7 @@ void scan_players(){
                                             64,
                                             30,
                                             OPAQUE_TEXT);
-    //fra aggiungi funzione di scan, quando ha finito restituisce valore start che troverà handler
+    peopleDetection();
 }
 
 void select_card();
@@ -29,7 +29,7 @@ void give_card(){
                                                 30,
                                                 OPAQUE_TEXT);
 
-    //fra aggiungi funzione di give cards, quando ha finito restituisce valore start che troverà handler
+    //fra aggiungi funzione di give cards, quando ha finito restituisce valore start che troverï¿½ handler
 }
 
 

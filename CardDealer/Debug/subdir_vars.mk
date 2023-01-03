@@ -13,7 +13,6 @@ C_SRCS += \
 ../HAL_OPT3001.c \
 ../action.c \
 ../condition.c \
-../main.c \
 ../main_freertos.c \
 ../startup_msp432p401r_FreeRTOS_ccs.c \
 ../system_msp432p401r.c \
@@ -25,7 +24,6 @@ C_DEPS += \
 ./HAL_OPT3001.d \
 ./action.d \
 ./condition.d \
-./main.d \
 ./main_freertos.d \
 ./startup_msp432p401r_FreeRTOS_ccs.d \
 ./system_msp432p401r.d \
@@ -37,7 +35,6 @@ OBJS += \
 ./HAL_OPT3001.obj \
 ./action.obj \
 ./condition.obj \
-./main.obj \
 ./main_freertos.obj \
 ./startup_msp432p401r_FreeRTOS_ccs.obj \
 ./system_msp432p401r.obj \
@@ -49,7 +46,6 @@ OBJS__QUOTED += \
 "HAL_OPT3001.obj" \
 "action.obj" \
 "condition.obj" \
-"main.obj" \
 "main_freertos.obj" \
 "startup_msp432p401r_FreeRTOS_ccs.obj" \
 "system_msp432p401r.obj" \
@@ -61,7 +57,6 @@ C_DEPS__QUOTED += \
 "HAL_OPT3001.d" \
 "action.d" \
 "condition.d" \
-"main.d" \
 "main_freertos.d" \
 "startup_msp432p401r_FreeRTOS_ccs.d" \
 "system_msp432p401r.d" \
@@ -73,7 +68,6 @@ C_SRCS__QUOTED += \
 "../HAL_OPT3001.c" \
 "../action.c" \
 "../condition.c" \
-"../main.c" \
 "../main_freertos.c" \
 "../startup_msp432p401r_FreeRTOS_ccs.c" \
 "../system_msp432p401r.c" \

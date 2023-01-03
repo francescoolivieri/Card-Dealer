@@ -72,6 +72,8 @@ main_freertos.obj: C:/Users/eddie/workspace_v12/Card-Dealer/CardDealer/action.h
 main_freertos.obj: C:/Users/eddie/OneDrive/Documenti/simplelink_msp432p4_sdk_3_40_01_02/source/ti/grlib/grlib.h
 main_freertos.obj: C:/Users/eddie/workspace_v12/Card-Dealer/CardDealer/condition.h
 main_freertos.obj: C:/Users/eddie/OneDrive/Documenti/simplelink_msp432p4_sdk_3_40_01_02/source/ti/grlib/grlib.h
+main_freertos.obj: C:/Users/eddie/workspace_v12/Card-Dealer/CardDealer/varaibles.h
+main_freertos.obj: C:/Users/eddie/OneDrive/Documenti/simplelink_msp432p4_sdk_3_40_01_02/source/ti/grlib/grlib.h
 main_freertos.obj: ../uart.h
 
 ../main_freertos.c:
@@ -215,6 +217,10 @@ C:/Users/eddie/workspace_v12/Card-Dealer/CardDealer/action.h:
 C:/Users/eddie/OneDrive/Documenti/simplelink_msp432p4_sdk_3_40_01_02/source/ti/grlib/grlib.h:
 
 C:/Users/eddie/workspace_v12/Card-Dealer/CardDealer/condition.h:
+
+C:/Users/eddie/OneDrive/Documenti/simplelink_msp432p4_sdk_3_40_01_02/source/ti/grlib/grlib.h:
+
+C:/Users/eddie/workspace_v12/Card-Dealer/CardDealer/varaibles.h:
 
 C:/Users/eddie/OneDrive/Documenti/simplelink_msp432p4_sdk_3_40_01_02/source/ti/grlib/grlib.h:
 
