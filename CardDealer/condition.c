@@ -5,8 +5,7 @@
 #include "LcdDriver/HAL_MSP_EXP432P401R_Crystalfontz128x128_ST7735.h"
 #include <stdio.h>
 #include <condition.h>
-#include <variables.h>
-
+#include <varaibles.h>
 
 int x=0;
 void joystick_press(){
@@ -40,6 +39,8 @@ void start_arrive(){
            event=START_ARRIVED;
        }
 }
+
+
 
 
 

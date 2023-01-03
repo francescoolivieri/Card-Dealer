@@ -17,7 +17,8 @@ C_SRCS += \
 ../main_freertos.c \
 ../startup_msp432p401r_FreeRTOS_ccs.c \
 ../system_msp432p401r.c \
-../uart.c 
+../uart.c \
+../varaibles.c 
 
 C_DEPS += \
 ./HAL_I2C.d \
@@ -28,7 +29,8 @@ C_DEPS += \
 ./main_freertos.d \
 ./startup_msp432p401r_FreeRTOS_ccs.d \
 ./system_msp432p401r.d \
-./uart.d 
+./uart.d \
+./varaibles.d 
 
 OBJS += \
 ./HAL_I2C.obj \
@@ -39,7 +41,8 @@ OBJS += \
 ./main_freertos.obj \
 ./startup_msp432p401r_FreeRTOS_ccs.obj \
 ./system_msp432p401r.obj \
-./uart.obj 
+./uart.obj \
+./varaibles.obj 
 
 OBJS__QUOTED += \
 "HAL_I2C.obj" \
@@ -50,7 +53,8 @@ OBJS__QUOTED += \
 "main_freertos.obj" \
 "startup_msp432p401r_FreeRTOS_ccs.obj" \
 "system_msp432p401r.obj" \
-"uart.obj" 
+"uart.obj" \
+"varaibles.obj" 
 
 C_DEPS__QUOTED += \
 "HAL_I2C.d" \
@@ -61,7 +65,8 @@ C_DEPS__QUOTED += \
 "main_freertos.d" \
 "startup_msp432p401r_FreeRTOS_ccs.d" \
 "system_msp432p401r.d" \
-"uart.d" 
+"uart.d" \
+"varaibles.d" 
 
 C_SRCS__QUOTED += \
 "../HAL_I2C.c" \
@@ -72,6 +77,7 @@ C_SRCS__QUOTED += \
 "../main_freertos.c" \
 "../startup_msp432p401r_FreeRTOS_ccs.c" \
 "../system_msp432p401r.c" \
-"../uart.c" 
+"../uart.c" \
+"../varaibles.c" 
 
 

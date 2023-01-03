@@ -6,9 +6,9 @@
 #include <stdio.h>
 #include <condition.h>
 #include <action.h>
-#include <variables.h>
+#include <varaibles.h>
 
-Graphics_Context g_sContext;
+
 
 static uint16_t resultsBuffer[2];
 
@@ -89,16 +89,6 @@ void _hwInit()
 
 
 
-event_t event = NONE;
-
-typedef struct{
-    State_t state;
-    void (*state_function)(void);
-} StateMachine_t;
-
-State_t current_state=WAITING;
-
-
 //funzioni di cambio stato
 void fn_WAITING(){
     if(event==JOYSTICK_PRESSED){
@@ -169,12 +159,8 @@ int main(void)
 }
 
 
-bool end;
-bool start;
-bool pressed=false;
 
-int count=0;
-bool semaforo=true;
+
 
 
 
@@ -228,7 +214,3 @@ void ADC14_IRQHandler(void)
 
 
 //handler sui bottoni
-
-
-
-

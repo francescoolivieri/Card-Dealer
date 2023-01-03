@@ -5,7 +5,7 @@
 #include "LcdDriver/HAL_MSP_EXP432P401R_Crystalfontz128x128_ST7735.h"
 #include <stdio.h>
 #include <action.h>
-#include <variables.h>
+#include <varaibles.h>
 
 void scan_players(){
     Graphics_clearDisplay(&g_sContext);
@@ -15,7 +15,7 @@ void scan_players(){
                                             64,
                                             30,
                                             OPAQUE_TEXT);
-    //fra aggiungi funzione di scan, quando ha finito restituisce valore start che troverï¿½ handler
+    //fra aggiungi funzione di scan, quando ha finito restituisce valore start che troverà handler
 }
 
 void select_card();
@@ -29,7 +29,7 @@ void give_card(){
                                                 30,
                                                 OPAQUE_TEXT);
 
-    //fra aggiungi funzione di give cards, quando ha finito restituisce valore start che troverï¿½ handler
+    //fra aggiungi funzione di give cards, quando ha finito restituisce valore start che troverà handler
 }
 
 
@@ -54,7 +54,7 @@ void give1_card(){
 void end_game(){
     Graphics_clearDisplay(&g_sContext);
     Graphics_drawStringCentered(&g_sContext,
-                                            (int8_t *)"Waiting to start:",
+                                            (int8_t *)"Waiting to start :",
                                             AUTO_STRING_LENGTH,
                                             64,
                                             30,
@@ -66,11 +66,13 @@ void end_game(){
 void select_card(){
         Graphics_clearDisplay(&g_sContext);
         Graphics_drawStringCentered(&g_sContext,
-                                                (int8_t *)"Number of cards: ",
+                                                (int8_t *)"Numero di carte: ",
                                                 AUTO_STRING_LENGTH,
                                                 64,
                                                 30,
                                                 OPAQUE_TEXT);
 }
+
+
 
 
