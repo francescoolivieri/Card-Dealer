@@ -6,8 +6,14 @@
 #include "LcdDriver/Crystalfontz128x128_ST7735.h"
 #include "LcdDriver/HAL_MSP_EXP432P401R_Crystalfontz128x128_ST7735.h"
 #include <stdio.h>
-
+#include <action.h>
+#include <condition.h>
+#include <ti/devices/msp432p4xx/inc/msp.h>
+#include <ti/devices/msp432p4xx/driverlib/driverlib.h>
+#include <variables.h>
 #include "uart.h"
+
+#define  HZ   24000000UL    // 24MHz  // Game Settings #define MAX_PLAYERS 8  // Queue Settings #define MAX_QUEUE_SIZE 10 #define LEN_QUEUE_MEX 20  xQueueHandle q1;  // Distance sensor #define DS_RECOGNITION_MODE 1 #define DS_DISTRIBUTION_MODE 2 #define DS_MAX_DISTANCE_DETECT 20 // cm  int meas1 = 0; int meas2 = 0; int meas1Count=0; int takeVal=0;  // Step Motor #define STEPS_360 512
 
 #define  HZ   24000000UL    // 24MHz
 #define MAX_QUEUE_SIZE 10
@@ -68,6 +74,40 @@ const Timer_A_CaptureModeConfig captureModeConfig =
         TIMER_A_OUTPUTMODE_OUTBITVALUE            // Output bit value
 };
 
+
+static uint16_t resultsBuffer[2];
+
+
+//adc initialization
+void _adcInit(){
+        GPIO_setAsPeripheralModuleFunctionInputPin(GPIO_PORT_P6, GPIO_PIN0, GPIO_TERTIARY_MODULE_FUNCTION);
+        GPIO_setAsPeripheralModuleFunctionInputPin(GPIO_PORT_P4, GPIO_PIN4, GPIO_TERTIARY_MODULE_FUNCTION);
+
+        ADC14_enableModule();
+        ADC14_initModule(ADC_CLOCKSOURCE_ADCOSC, ADC_PREDIVIDER_64, ADC_DIVIDER_8, 0);
+
+        ADC14_configureMultiSequenceMode(ADC_MEM0, ADC_MEM1, true);
+        ADC14_configureConversionMemory(ADC_MEM0,
+                ADC_VREFPOS_AVCC_VREFNEG_VSS,
+                ADC_INPUT_A15, ADC_NONDIFFERENTIAL_INPUTS);
+
+        ADC14_configureConversionMemory(ADC_MEM1,
+                ADC_VREFPOS_AVCC_VREFNEG_VSS,
+                ADC_INPUT_A9, ADC_NONDIFFERENTIAL_INPUTS);
+
+        ADC14_enableInterrupt(ADC_INT1);
+
+        Interrupt_enableInterrupt(INT_ADC14);
+        Interrupt_enableMaster();
+
+        ADC14_enableSampleTimer(ADC_AUTOMATIC_ITERATION);
+
+        ADC14_enableConversion();
+        ADC14_toggleConversionTrigger();
+}
+
+
+
 // GRAPHICS
 
 void _graphicsInit()
@@ -84,6 +124,45 @@ void _graphicsInit()
     Graphics_setBackgroundColor(&g_sContext, GRAPHICS_COLOR_WHITE);
     GrContextFontSet(&g_sContext, &g_sFontFixed6x8);
     Graphics_clearDisplay(&g_sContext);
+    Graphics_drawStringCentered(&g_sContext,
+                                            (int8_t *)"Waiting to start :",
+                                            AUTO_STRING_LENGTH,
+                                            64,
+                                            30,
+                                            OPAQUE_TEXT);
+
+}
+
+void turnOnBuzzer(){
+    Interrupt_disableInterrupt(INT_TA0_N);
+    Timer_A_stopTimer(TIMER_A0_BASE);
+    /* Configures P2.7 to PM_TA0.4 for using Timer PWM to control the buzzer */
+    GPIO_setAsPeripheralModuleFunctionOutputPin(GPIO_PORT_P2, GPIO_PIN7,
+    GPIO_PRIMARY_MODULE_FUNCTION);
+
+    /* Configuring Timer_A0 for Up Mode and starting */
+    Timer_A_configureUpMode(TIMER_A0_BASE, &upConfig);
+    Timer_A_startCounter(TIMER_A0_BASE, TIMER_A_UP_MODE);
+
+    Timer_A_initCompare(TIMER_A0_BASE, &compareConfig_PWM); // For P2.7
+}
+
+void turnOffBuzzer(){
+    Timer_A_stopTimer(TIMER_A0_BASE);
+
+    GPIO_setAsOutputPin(GPIO_PORT_P2, GPIO_PIN7);
+
+    /* Configuring Capture Mode */
+    Timer_A_initCapture(TIMER_A0_BASE, &captureModeConfig);
+
+
+    /* Configuring Continuous Mode */
+    Timer_A_configureContinuousMode(TIMER_A0_BASE, &continuousModeConfig);
+
+    /* Starting the Timer_A0 in continuous mode */
+    Timer_A_startCounter(TIMER_A0_BASE, TIMER_A_CONTINUOUS_MODE);
+
+    Interrupt_enableInterrupt(INT_TA0_N);
 
 }
 
@@ -140,6 +219,7 @@ void _hwInit()
     CS_initClockSignal(CS_SMCLK, CS_DCOCLK_SELECT, CS_CLOCK_DIVIDER_8);
     CS_initClockSignal(CS_ACLK, CS_REFOCLK_SELECT, CS_CLOCK_DIVIDER_8);
 
+    _adcInit();
     _graphicsInit();
 
     // set pins for Stepper Motor
@@ -164,6 +244,61 @@ void _hwInit()
     Interrupt_enableMaster();
 
 }
+
+
+//funzioni di cambio stato
+void fn_WAITING(){
+    if(event==JOYSTICK_PRESSED){
+        scan_players();
+        current_state=SCAN;
+    }
+}
+
+void fn_SCAN(){
+    if(event==END_ARRIVED){
+        select_card();
+        current_state=CARTE;
+    }
+}
+
+void fn_CARTE(){
+    if(event==JOYSTICK_PRESSED){
+        give_card();
+        current_state=DISTRIBUZIONE;
+    }
+}
+
+void fn_DISTRIBUZIONE(){
+    if(event==START_ARRIVED){
+        game_play();
+        current_state=GAME;
+    }
+}
+
+void fn_GAME1(){
+    if(event==BUTTON1_PRESSED){
+        give1_card();
+        current_state=GAME;
+    }
+}
+
+
+void fn_GAME2(){
+    if(event==BUTTON2_PRESSED){
+        end_game();
+        current_state=WAITING;
+    }
+}
+
+
+StateMachine_t fsm[]={
+                      {WAITING, fn_WAITING},
+                      {SCAN, fn_SCAN},
+                      {CARTE, fn_CARTE},
+                      {DISTRIBUZIONE, fn_DISTRIBUZIONE},
+                      {GAME, fn_GAME1},
+                      {GAME, fn_GAME2}
+};
 
 /***
  * Declaration of functions
@@ -191,14 +326,14 @@ int takeVal=0;
 
 xQueueHandle q1;
 
-typedef enum{
+/*typedef enum{
     IDLE,
     GAME_SELECTION,
     RECOGNITION,
     IN_GAME,
 }State_t;
 
-State_t current_state = IDLE;
+State_t current_state = IDLE; */
 
 /*-----------------------------------------------------------*/
 int main(void)
@@ -221,23 +356,10 @@ int main(void)
     // Initialize UART
     uart_init(uart_baudrate);
 
-    // Start people detection
-    peopleDetection();
-
-    while(1){
-
-        switch(current_state){
-            case IDLE:
-                current_state = RECOGNITION;
-
-                break;
-            case RECOGNITION:
-                peopleDetection();
-
-                break;
+    while(1)
+        {
+            (*fsm[current_state].state_function)();
         }
-
-    }
 
     /* The following line should never be reached.
      * Otherwise there was insufficient FreeRTOS heap
@@ -284,7 +406,6 @@ void peopleDetection(){
  * @param Degrees of rotation
  */
 //m1_1_1s//
-
 void vTaskStepperMotor(void *pvParameters)
 {
     int cont = 0;
@@ -427,6 +548,55 @@ void TA0_N_IRQHandler(void)
         }
     }
 }
+
+//handler sul joystick
+void ADC14_IRQHandler(void)
+{
+    uint64_t status;
+
+    status = ADC14_getEnabledInterruptStatus();
+    ADC14_clearInterruptFlag(status);
+
+    if(status & ADC_INT1 && current_state==CARTE)
+    {
+        resultsBuffer[1] = ADC14_getResult(ADC_MEM1);
+        char string[10];
+
+        if(resultsBuffer[1]>14000 && semaforo==true){
+            count=count+1;
+            semaforo=false;
+        }
+
+        if(resultsBuffer[1]<10000 && resultsBuffer[1]>4000 && semaforo==false){
+            semaforo=true;
+        }
+
+
+        if(resultsBuffer[1]<2000 && semaforo==true){
+            count=count-1;
+            semaforo=false;
+            }
+
+        sprintf(string, "%d", count);
+        Graphics_drawStringCentered(&g_sContext,
+                                    (int8_t *)string,
+                                    8,
+                                    64,
+                                    70,
+                                    OPAQUE_TEXT);
+    }
+
+    if(status & ADC_INT1 && current_state==WAITING){
+            resultsBuffer[1] = ADC14_getResult(ADC_MEM1);
+            if (!(P4IN & GPIO_PIN1)){
+                joystick_press();
+                pressed=true;
+            }
+
+        }
+
+}
+
 
 /***
  * A custom print function, which shall be extended in Task 2.1.
