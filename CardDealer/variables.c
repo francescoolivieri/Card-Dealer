@@ -4,7 +4,7 @@
 #include "LcdDriver/Crystalfontz128x128_ST7735.h"
 #include "LcdDriver/HAL_MSP_EXP432P401R_Crystalfontz128x128_ST7735.h"
 #include <stdio.h>
-#include <varaibles.h>
+#include <variables.h>
 
 event_t event = NONE;
 

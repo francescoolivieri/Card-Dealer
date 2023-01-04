@@ -57,6 +57,8 @@ variables.obj: C:/Users/eddie/OneDrive/Documenti/simplelink_msp432p4_sdk_3_40_01
 variables.obj: ../LcdDriver/HAL_MSP_EXP432P401R_Crystalfontz128x128_ST7735.h
 variables.obj: C:/ti/ccs1210/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/stdio.h
 variables.obj: C:/ti/ccs1210/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/stdarg.h
+variables.obj: C:/Users/eddie/workspace_v12/Card-Dealer/CardDealer/variables.h
+variables.obj: C:/Users/eddie/OneDrive/Documenti/simplelink_msp432p4_sdk_3_40_01_02/source/ti/grlib/grlib.h
 
 ../variables.c:
 
@@ -171,4 +173,8 @@ C:/Users/eddie/OneDrive/Documenti/simplelink_msp432p4_sdk_3_40_01_02/source/ti/g
 C:/ti/ccs1210/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/stdio.h:
 
 C:/ti/ccs1210/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/stdarg.h:
+
+C:/Users/eddie/workspace_v12/Card-Dealer/CardDealer/variables.h:
+
+C:/Users/eddie/OneDrive/Documenti/simplelink_msp432p4_sdk_3_40_01_02/source/ti/grlib/grlib.h:
 

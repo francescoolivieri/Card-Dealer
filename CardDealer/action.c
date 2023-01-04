@@ -5,7 +5,7 @@
 #include "LcdDriver/HAL_MSP_EXP432P401R_Crystalfontz128x128_ST7735.h"
 #include <stdio.h>
 #include <action.h>
-#include <varaibles.h>
+#include <variables.h>
 
 void scan_players(){
     Graphics_clearDisplay(&g_sContext);
@@ -16,6 +16,7 @@ void scan_players(){
                                             30,
                                             OPAQUE_TEXT);
     peopleDetection();
+    event=END_ARRIVED;
 }
 
 void select_card();

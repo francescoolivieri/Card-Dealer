@@ -8,10 +8,12 @@
 #include <stdio.h>
 #include <action.h>
 #include <condition.h>
-#include <varaibles.h>
 #include <ti/devices/msp432p4xx/inc/msp.h>
 #include <ti/devices/msp432p4xx/driverlib/driverlib.h>
+#include <variables.h>
 #include "uart.h"
+
+#define  HZ   24000000UL    // 24MHz  // Game Settings #define MAX_PLAYERS 8  // Queue Settings #define MAX_QUEUE_SIZE 10 #define LEN_QUEUE_MEX 20  xQueueHandle q1;  // Distance sensor #define DS_RECOGNITION_MODE 1 #define DS_DISTRIBUTION_MODE 2 #define DS_MAX_DISTANCE_DETECT 20 // cm  int meas1 = 0; int meas2 = 0; int meas1Count=0; int takeVal=0;  // Step Motor #define STEPS_360 512
 
 #define  HZ   24000000UL    // 24MHz
 #define MAX_QUEUE_SIZE 10
@@ -323,7 +325,6 @@ int main(void)
 
     while(1)
         {
-            PCM_gotoLPM0();
             (*fsm[current_state].state_function)();
         }
 
@@ -372,7 +373,6 @@ void peopleDetection(){
  * @param Degrees of rotation
  */
 //m1_1_1s//
-
 void vTaskStepperMotor(void *pvParameters)
 {
     int cont = 0;
@@ -556,6 +556,7 @@ void ADC14_IRQHandler(void)
     if(status & ADC_INT1 && current_state==WAITING){
             resultsBuffer[1] = ADC14_getResult(ADC_MEM1);
             if (!(P4IN & GPIO_PIN1)){
+                joystick_press();
                 pressed=true;
             }
 

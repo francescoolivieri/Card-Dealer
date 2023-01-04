@@ -59,7 +59,7 @@ condition.obj: C:/ti/ccs1210/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/st
 condition.obj: C:/ti/ccs1210/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/stdarg.h
 condition.obj: C:/Users/eddie/workspace_v12/Card-Dealer/CardDealer/condition.h
 condition.obj: C:/Users/eddie/OneDrive/Documenti/simplelink_msp432p4_sdk_3_40_01_02/source/ti/grlib/grlib.h
-condition.obj: C:/Users/eddie/workspace_v12/Card-Dealer/CardDealer/varaibles.h
+condition.obj: C:/Users/eddie/workspace_v12/Card-Dealer/CardDealer/variables.h
 condition.obj: C:/Users/eddie/OneDrive/Documenti/simplelink_msp432p4_sdk_3_40_01_02/source/ti/grlib/grlib.h
 
 ../condition.c:
@@ -180,7 +180,7 @@ C:/Users/eddie/workspace_v12/Card-Dealer/CardDealer/condition.h:
 
 C:/Users/eddie/OneDrive/Documenti/simplelink_msp432p4_sdk_3_40_01_02/source/ti/grlib/grlib.h:
 
-C:/Users/eddie/workspace_v12/Card-Dealer/CardDealer/varaibles.h:
+C:/Users/eddie/workspace_v12/Card-Dealer/CardDealer/variables.h:
 
 C:/Users/eddie/OneDrive/Documenti/simplelink_msp432p4_sdk_3_40_01_02/source/ti/grlib/grlib.h:
 

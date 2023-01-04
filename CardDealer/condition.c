@@ -5,11 +5,13 @@
 #include "LcdDriver/HAL_MSP_EXP432P401R_Crystalfontz128x128_ST7735.h"
 #include <stdio.h>
 #include <condition.h>
-#include <varaibles.h>
+#include <variables.h>
 
 int x=0;
 void joystick_press(){
     if (pressed==true){
+        Interrupt_disableInterrupt(INT_ADC14);
+        Graphics_clearDisplay(&g_sContext);
         event=JOYSTICK_PRESSED;
         pressed=false;
     }

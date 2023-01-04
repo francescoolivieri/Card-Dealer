@@ -6,7 +6,7 @@
 "./startup_msp432p401r_FreeRTOS_ccs.obj"
 "./system_msp432p401r.obj"
 "./uart.obj"
-"./varaibles.obj"
+"./variables.obj"
 "./FreeRTOS/croutine.obj"
 "./FreeRTOS/event_groups.obj"
 "./FreeRTOS/list.obj"
