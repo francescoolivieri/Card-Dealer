@@ -1,48 +1,40 @@
-#include <ti/devices/msp432p4xx/inc/msp.h>
-#include <ti/devices/msp432p4xx/driverlib/driverlib.h>
-#include <ti/grlib/grlib.h>
-#include "LcdDriver/Crystalfontz128x128_ST7735.h"
-#include "LcdDriver/HAL_MSP_EXP432P401R_Crystalfontz128x128_ST7735.h"
-#include <stdio.h>
-#include <condition.h>
-#include <variables.h>
+#include "events.h"
 
-int x=0;
+
 void joystick_press(){
-    if (pressed==true){
-        Interrupt_disableInterrupt(INT_ADC14);
-        Graphics_clearDisplay(&g_sContext);
-        event=JOYSTICK_PRESSED;
-        pressed=false;
-    }
+    event = JOYSTICK_PRESSED;
 }
 
+void joystick_up(){
+    event = JOYSTICK_UP;
+}
+void joystick_down(){
+    event = JOYSTICK_DOWN;
+}
 
 void button1_press(){
-    if (x==1){
-           event=BUTTON1_PRESSED;
-       }
+    event=BUTTON1_PRESSED;
 }
 
 void button2_press(){
-    if (x==2){
-             event=BUTTON2_PRESSED;
-         }
+    event=BUTTON2_PRESSED;
 }
 
 void end_arrive(){
-    if(end==true){
-        event=END_ARRIVED;
-    }
+    event=END_ARRIVED;
 }
 
 void start_arrive(){
-    if(start==true){
-           event=START_ARRIVED;
-       }
+    event=START_ARRIVED;
 }
 
+event_t getEvent(){
+    return event;
+}
 
+void clearEvent(){
+    event = NONE;
+}
 
 
 

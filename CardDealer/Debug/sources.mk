@@ -116,4 +116,6 @@ FreeRTOS \
 FreeRTOS/portable/CCS/ARM_CM4F \
 FreeRTOS/portable/MemMang \
 LcdDriver \
+Libraries/DefaultLib \
+Libraries \
 
