@@ -23,21 +23,46 @@ static const uint32_t uart_baudrate = 115200;
 void initLibInterface(); // calls card_dealer init
 int peopleDetection();
 
-static int numCards = 0;
+static int numStartingCards = 0;
 void gameSelection();
 
 int getPeopleNumber();
-int* getPeoplePositions();
+int getPeoplePosition(int i);
 void incPeopleNumber();
 void setNewPersonPosition(int steps);
 
 // Distance sensor
 #define DS_RECOGNITION_MODE 1
+#define DS_GAME_MODE 2
 #define DS_MAX_DISTANCE_DETECT 20 // cm
 void vTaskDistanceSensor(void *pvParameters);
 
 // Step Motor
-#define STEPS_360 512
+#define STEPS_360 2048
+
+typedef struct stepParameter{
+    bool forward;
+    int steps;
+}stepParameter;
+
 void vTaskStepperMotor(void *pvParameters);
+int degreesToSteps(int degrees);
+
+// Emergency return
+static int homePosition = 0;
+void resetPosition();
+int getHomePosition();
+void updateHomePosition(int steps);
+void clearHomePosition();
+
+#define NUM_TOTAL_CARDS 40
+static unsigned int cards_left = NUM_TOTAL_CARDS;  // goes down when give card
+int getCardsLeft();
+
+// Distribution
+void distributeCards();
+
+// Game
+void startGame();
 
 #endif /* LIBRARIES_INTERFACES_H_ */

@@ -6,6 +6,7 @@ void fn_SCAN();
 void fn_GAME_SELECTION();
 void fn_DISTRIBUTION();
 void fn_GAME();
+void fn_EMERGENCY_STOP();
 
 typedef enum{
     IDLE,
@@ -13,7 +14,8 @@ typedef enum{
     SCAN,
     GAME_SELECTION,
     CARD_DISTRIBUTION,
-    GAME
+    GAME,
+    EMERGENCY_STOP
 }State_t;
 
 typedef struct{
@@ -27,7 +29,8 @@ StateMachine_t fsm[]={
                       {SCAN, fn_SCAN},
                       {GAME_SELECTION, fn_GAME_SELECTION},
                       {CARD_DISTRIBUTION, fn_DISTRIBUTION},
-                      {GAME, fn_GAME}
+                      {GAME, fn_GAME},
+                      {EMERGENCY_STOP, fn_EMERGENCY_STOP}
 };
 
 State_t current_state;
@@ -74,6 +77,7 @@ void fn_IDLE(){
 void fn_WAITING(){
     if(state_transition){
         Graphics_drawStringCentered(&g_sContext,(int8_t *)"Waiting State, press Joystick", AUTO_STRING_LENGTH, 64, 30, OPAQUE_TEXT);
+        clearEvent();
         state_transition = false;
     }
 
@@ -88,7 +92,10 @@ void fn_WAITING(){
 void fn_SCAN(){
     peopleDetection();
 
-    current_state = GAME_SELECTION;
+    if(getEvent() == BUTTON2_PRESSED)
+        current_state = EMERGENCY_STOP;
+    else
+        current_state = GAME_SELECTION;
     state_transition = true;
 }
 
@@ -107,25 +114,40 @@ void fn_GAME_SELECTION(){
 
     gameSelection();
 
-    current_state = CARD_DISTRIBUTION;
+
+    if(getEvent() == BUTTON2_PRESSED)
+            current_state = EMERGENCY_STOP;
+    else
+            current_state = CARD_DISTRIBUTION;
     state_transition = true;
 }
 
 // EXPAND WORK
 void fn_DISTRIBUTION(){
-    if(getEvent()==START_ARRIVED){
-       // game_play();
-        current_state=GAME;
+    distributeCards();
+
+    if(getEvent()==BUTTON2_PRESSED){
+        current_state=EMERGENCY_STOP;
+    }else{
+        current_state = GAME;
     }
 }
 
 void fn_GAME(){
-    if(getEvent()==BUTTON1_PRESSED){
-       // give1_card();
-        current_state=GAME;
+    startGame();
+
+    if(getEvent()==BUTTON2_PRESSED){
+        current_state=EMERGENCY_STOP;
+    }else{
+        current_state=IDLE;
     }
 }
 
+void fn_EMERGENCY_STOP(){
+    resetPosition();
+
+    current_state = IDLE;
+}
 
 /* -------------------------------------------------------------------------
  * Default FreeRTOS hooks

@@ -184,6 +184,49 @@ void ADC14_IRQHandler(void)    // Handler for joystick
 }
 
 
+void makeStep(bool move_forward){
+
+    if(!move_forward){
+        miglior_variabile_del_mondo_in_assoluto_best_in_town_bro_to_the_top_never_stop--;
+        if(miglior_variabile_del_mondo_in_assoluto_best_in_town_bro_to_the_top_never_stop < 0)
+            miglior_variabile_del_mondo_in_assoluto_best_in_town_bro_to_the_top_never_stop = 3;
+    }
+
+    switch(miglior_variabile_del_mondo_in_assoluto_best_in_town_bro_to_the_top_never_stop){
+        case 0:
+            GPIO_setOutputHighOnPin(GPIO_PORT_P1, GPIO_PIN7);
+            GPIO_setOutputLowOnPin(GPIO_PORT_P5, GPIO_PIN0);
+            GPIO_setOutputLowOnPin(GPIO_PORT_P5, GPIO_PIN2);
+            GPIO_setOutputHighOnPin(GPIO_PORT_P3, GPIO_PIN6);
+
+            break;
+        case 1:
+            GPIO_setOutputLowOnPin(GPIO_PORT_P1, GPIO_PIN7);
+            GPIO_setOutputHighOnPin(GPIO_PORT_P5, GPIO_PIN0);
+            GPIO_setOutputLowOnPin(GPIO_PORT_P5, GPIO_PIN2);
+            GPIO_setOutputHighOnPin(GPIO_PORT_P3, GPIO_PIN6);
+
+            break;
+        case 2:
+            GPIO_setOutputLowOnPin(GPIO_PORT_P1, GPIO_PIN7);
+            GPIO_setOutputHighOnPin(GPIO_PORT_P5, GPIO_PIN0);
+            GPIO_setOutputHighOnPin(GPIO_PORT_P5, GPIO_PIN2);
+            GPIO_setOutputLowOnPin(GPIO_PORT_P3, GPIO_PIN6);
+
+            break;
+        case 3:
+            GPIO_setOutputHighOnPin(GPIO_PORT_P1, GPIO_PIN7);
+            GPIO_setOutputLowOnPin(GPIO_PORT_P5, GPIO_PIN0);
+            GPIO_setOutputHighOnPin(GPIO_PORT_P5, GPIO_PIN2);
+            GPIO_setOutputLowOnPin(GPIO_PORT_P3, GPIO_PIN6);
+
+            break;
+    }
+
+    if(move_forward)
+        miglior_variabile_del_mondo_in_assoluto_best_in_town_bro_to_the_top_never_stop++;
+
+}
 
 
 void initTriggerDS(){

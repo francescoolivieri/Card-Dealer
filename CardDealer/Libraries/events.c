@@ -28,6 +28,18 @@ void start_arrive(){
     event=START_ARRIVED;
 }
 
+void give_card(){
+    event=GIVE_CARD;
+}
+
+void skip(){
+    event=SKIP;
+}
+
+void person_detected(){
+    event=PERSON_DETECTED;
+}
+
 event_t getEvent(){
     return event;
 }

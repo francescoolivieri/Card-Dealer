@@ -75,6 +75,10 @@ void _hwInit();
 void TA0_N_IRQHandler(void);
 void ADC14_IRQHandler(void);
 
+// Step Motor
+static int miglior_variabile_del_mondo_in_assoluto_best_in_town_bro_to_the_top_never_stop = 0;
+void makeStep(bool move_forward);
+
 
 // Distance sensor
 void initTriggerDS();
