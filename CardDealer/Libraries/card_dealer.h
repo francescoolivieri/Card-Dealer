@@ -68,12 +68,21 @@ Graphics_Context getGraphicsContext();
 void initCardDealer();  // calls all the others
 void _adcInit();
 void _graphicsInit();
+void button_init();
+void initDispenserMotor();
+void giveOneCard();
 void _hwInit();
 
 
 // handlers
+static int meas1 = 0;
+static int meas2 = 0;
+static int meas1Count=0;
 void TA0_N_IRQHandler(void);
 void ADC14_IRQHandler(void);
+void PORT3_IRQHandler(void);
+void PORT5_IRQHandler(void);
+
 
 // Step Motor
 static int miglior_variabile_del_mondo_in_assoluto_best_in_town_bro_to_the_top_never_stop = 0;
@@ -84,6 +93,11 @@ void makeStep(bool move_forward);
 void initTriggerDS();
 void sendTrigPulseDS();
 void startDelayCaptureDS();
+
+// Dispenser Motor
+void turnOnDispenserForward();
+void turnOnDispenserBackward();
+void turnOffDispenser();
 
 void turnOnBuzzer();
 void turnOffBuzzer();

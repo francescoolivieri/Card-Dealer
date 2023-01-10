@@ -68,6 +68,7 @@ int main(void)
 
 void fn_IDLE(){
     initLibInterface();  // initialize peripherals, clocks, graphics, timers and adc
+    printf("CACCA ASSURDA\n");
     g_sContext = getGraphicsContext();
 
     current_state = WAITING;
@@ -76,13 +77,12 @@ void fn_IDLE(){
 
 void fn_WAITING(){
     if(state_transition){
-        Graphics_drawStringCentered(&g_sContext,(int8_t *)"Waiting State, press Joystick", AUTO_STRING_LENGTH, 64, 30, OPAQUE_TEXT);
+        Graphics_drawStringCentered(&g_sContext,(int8_t *)"Waiting State,\n press Joystick", AUTO_STRING_LENGTH, 64, 30, OPAQUE_TEXT);
         clearEvent();
         state_transition = false;
     }
 
-    if(getEvent() == JOYSTICK_PRESSED){
-        Interrupt_disableInterrupt(INT_ADC14);
+    if(getEvent() == BUTTON1_PRESSED){
         Graphics_clearDisplay(&g_sContext);
         current_state=SCAN;
         state_transition = true;

@@ -64,6 +64,43 @@ void _graphicsInit()
 
 }
 
+void button_init(){
+    //initialization button1 MKII
+        GPIO_setAsInputPinWithPullUpResistor(GPIO_PORT_P3, GPIO_PIN5);
+        GPIO_enableInterrupt(GPIO_PORT_P3, GPIO_PIN5);
+
+        //initialization button1 MKII
+        GPIO_setAsInputPinWithPullUpResistor(GPIO_PORT_P5, GPIO_PIN1);
+        GPIO_enableInterrupt(GPIO_PORT_P5, GPIO_PIN1);
+
+        //interrupt enable
+        Interrupt_enableInterrupt(INT_PORT3);
+        Interrupt_enableInterrupt(INT_PORT5);
+
+}
+
+void initDispenserMotor(){
+    /* Stop watchdog timer */
+        WDT_A_holdTimer();
+
+    /* Configuring output */
+    GPIO_setAsOutputPin(GPIO_PORT_P4, GPIO_PIN3);
+    GPIO_setOutputLowOnPin(GPIO_PORT_P4, GPIO_PIN3);
+
+    GPIO_setAsOutputPin(GPIO_PORT_P4, GPIO_PIN1);
+    GPIO_setOutputLowOnPin(GPIO_PORT_P4, GPIO_PIN1);
+
+    /* Starting the Timer32 */
+       Timer32_initModule(TIMER32_1_BASE, TIMER32_PRESCALER_1, TIMER32_32BIT,TIMER32_PERIODIC_MODE); // uses MCLK
+       Timer32_disableInterrupt(TIMER32_1_BASE);
+       Timer32_setCount(TIMER32_1_BASE, 1);
+       Timer32_startTimer(TIMER32_1_BASE, true);
+
+    /* Starting the Timer_A0 in continuous mode */
+       Timer_A_startCounter(TIMER_A1_BASE, TIMER_A_CONTINUOUS_MODE);
+
+}
+
 void _hwInit()
 {
     /* Halting WDT and disabling master interrupts */
@@ -86,6 +123,8 @@ void _hwInit()
 
     _adcInit();
     _graphicsInit();
+    button_init();
+    initDispenserMotor();
 
     // set pins for Stepper Motor
     GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN7);
@@ -113,15 +152,14 @@ void _hwInit()
 
 /* ------- Interrupt Handlers ------- */
 
-int meas1 = 0;
-int meas2 = 0;
-int meas1Count=0;
 void TA0_N_IRQHandler(void)  // Timer Interrupt for distance sensor
 {
     int rising  = 0;
 
     Timer_A_clearCaptureCompareInterrupt(TIMER_A0_BASE,
             TIMER_A_CAPTURECOMPARE_REGISTER_1);
+
+    printf("OK");
 
     if(P2IN&0x10) rising=1; else rising=0;
 
@@ -183,6 +221,31 @@ void ADC14_IRQHandler(void)    // Handler for joystick
 
 }
 
+void PORT3_IRQHandler(void)
+{
+
+    uint_fast16_t status = GPIO_getEnabledInterruptStatus(GPIO_PORT_P3);
+    GPIO_clearInterruptFlag(GPIO_PORT_P3, status);
+
+    if((status & GPIO_PIN5)){
+        button1_press();
+    }
+}
+
+//handler button1
+void PORT5_IRQHandler(void)
+{
+
+    uint_fast16_t status = GPIO_getEnabledInterruptStatus(GPIO_PORT_P5);
+    GPIO_clearInterruptFlag(GPIO_PORT_P5, status);
+
+    if((status & GPIO_PIN1)){
+        button2_press();
+    }
+}
+
+
+/* -------- --------*/
 
 void makeStep(bool move_forward){
 
@@ -191,7 +254,7 @@ void makeStep(bool move_forward){
         if(miglior_variabile_del_mondo_in_assoluto_best_in_town_bro_to_the_top_never_stop < 0)
             miglior_variabile_del_mondo_in_assoluto_best_in_town_bro_to_the_top_never_stop = 3;
     }
-
+    printf("%d\n", miglior_variabile_del_mondo_in_assoluto_best_in_town_bro_to_the_top_never_stop);
     switch(miglior_variabile_del_mondo_in_assoluto_best_in_town_bro_to_the_top_never_stop){
         case 0:
             GPIO_setOutputHighOnPin(GPIO_PORT_P1, GPIO_PIN7);
@@ -223,8 +286,10 @@ void makeStep(bool move_forward){
             break;
     }
 
-    if(move_forward)
+    if(move_forward){
         miglior_variabile_del_mondo_in_assoluto_best_in_town_bro_to_the_top_never_stop++;
+        miglior_variabile_del_mondo_in_assoluto_best_in_town_bro_to_the_top_never_stop = miglior_variabile_del_mondo_in_assoluto_best_in_town_bro_to_the_top_never_stop%4;
+    }
 
 }
 
@@ -308,4 +373,19 @@ void turnOffBuzzer(){
 
     Interrupt_enableInterrupt(INT_TA0_N);
 
+}
+
+void turnOnDispenserForward(){
+    GPIO_setOutputHighOnPin(GPIO_PORT_P4, GPIO_PIN1);
+    GPIO_setOutputLowOnPin(GPIO_PORT_P4, GPIO_PIN3);
+}
+
+void turnOnDispenserBackward(){
+    GPIO_setOutputLowOnPin(GPIO_PORT_P4, GPIO_PIN1);
+    GPIO_setOutputHighOnPin(GPIO_PORT_P4, GPIO_PIN3);
+}
+
+void turnOffDispenser(){
+    GPIO_setOutputLowOnPin(GPIO_PORT_P4, GPIO_PIN3);
+    GPIO_setOutputLowOnPin(GPIO_PORT_P4, GPIO_PIN1);
 }

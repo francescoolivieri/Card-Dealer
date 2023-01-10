@@ -58,6 +58,7 @@ void clearHomePosition();
 #define NUM_TOTAL_CARDS 40
 static unsigned int cards_left = NUM_TOTAL_CARDS;  // goes down when give card
 int getCardsLeft();
+bool cardRemoved();
 
 // Distribution
 void distributeCards();

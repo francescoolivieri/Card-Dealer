@@ -53,6 +53,9 @@ int peopleDetection(){
 
     // Start the tasks
     vTaskStartScheduler();
+    vTaskEndScheduler();
+
+    printf("SCHEDULER FINITO\n");
 
     // NOTIFY END is ugly
 
@@ -66,7 +69,7 @@ void gameSelection(){
             numStartingCards++;
             clearEvent();
         }else if(getEvent() == JOYSTICK_DOWN){
-            numStartingCards++;
+            numStartingCards--;
             clearEvent();
         }
 
@@ -87,7 +90,7 @@ void distributeCards(){
 
         int j;
         for(j=0 ; j<numStartingCards ; j++){
-            //give card funct
+            giveOneCard();
         }
     }
 
@@ -101,7 +104,7 @@ void startGame(){
         for(i=0 ; i<getPeopleNumber() && getEvent()!=BUTTON2_PRESSED ; i++){
             stepParameter pv;
             pv.steps = getPeoplePosition(i);
-            pv.forward = false;
+            pv.forward = true;
             vTaskStepperMotor((void*)&pv);
 
             int DS_mode = DS_GAME_MODE;
@@ -115,6 +118,33 @@ void startGame(){
         char string[20] = "Finie le carte caro";
         Graphics_drawStringCentered(&g_sContext, (int8_t*) string, 15, 64, 70, OPAQUE_TEXT);
     }
+}
+
+void giveOneCard(){
+
+    if(getCardsLeft()>0){
+        float scaleFactor = 1000000;
+        float spinForwardTime = 0.015;
+        float spinBackwardsTime = 0.008;
+
+        /*wheel spins forward to give the card*/
+        Timer32_setCount(TIMER32_1_BASE, 24 * scaleFactor*spinForwardTime); // multiply by 24 -> 1 us *
+        turnOnDispenserForward();
+        while (Timer32_getValue(TIMER32_1_BASE) > 0); // Wait 0.015sec
+
+        /*wheel spins backwards to align moved cards*/
+        turnOnDispenserBackward();
+        Timer32_setCount(TIMER32_1_BASE, 24 * scaleFactor*spinBackwardsTime);
+        while (Timer32_getValue(TIMER32_1_BASE) > 0); // Wait 0.008sec
+
+        /*motor is turned off*/
+        turnOffDispenser();
+
+        cardRemoved();
+    }else{
+        button2_press();
+    }
+
 }
 
 void resetPosition(){
@@ -138,6 +168,8 @@ void resetPosition(){
  */
 void vTaskDistanceSensor(void *pvParameters)
 {
+    printf("ANSDABFJKB");
+    fflush(stdout);
     uart_println("Start TaskDistanceSensor.");
     int count = 0;
     int DS_mode = (*((int *)pvParameters));
@@ -145,7 +177,7 @@ void vTaskDistanceSensor(void *pvParameters)
     initTriggerDS();
     startDelayCaptureDS();
 
-    while (1 && !(DS_mode!=DS_GAME_MODE && getEvent()!=SKIP)) {
+    while (1 && (DS_mode!=DS_GAME_MODE || getEvent()!=SKIP)) {
         sendTrigPulseDS();
         vTaskDelay(HZ / 8);     // delay
 
@@ -155,6 +187,7 @@ void vTaskDistanceSensor(void *pvParameters)
             int distCM = DS_getDistCM();
             DS_valueRead();
             printf("Distance: %i cm \n", distCM);
+
 
             if(DS_mode == DS_RECOGNITION_MODE){ // recognition mode
                 if(distCM<DS_MAX_DISTANCE_DETECT){
@@ -181,7 +214,8 @@ void vTaskDistanceSensor(void *pvParameters)
                     }
                 }else{
                     if(count > 12){
-                        give_card();
+                        give_card();  // can be removed
+                        giveOneCard();
                     }
 
                     count = 0;
@@ -201,9 +235,9 @@ void vTaskStepperMotor(void *pvParameters)
 {
     stepParameter pv = (*((stepParameter *)pvParameters));
     int cont = 0;
-    uart_println("Start TaskStepperMotor.");
+    //uart_println("Start TaskStepperMotor.");
 
-    int velocity = 80000;
+    int velocity = 150000;
     while (cont < pv.steps && getEvent()!=BUTTON2_PRESSED)
     {
         makeStep(pv.forward);
@@ -231,14 +265,30 @@ void vTaskStepperMotor(void *pvParameters)
         }
     }
 
-    vTaskDelete(xTaskXHandle);
-    vTaskEndScheduler();
+    vTaskDelete(NULL);
+
+    printf("FINITO\n");
+    fflush(stdout);
+
+    //vTaskEndScheduler();
+    //vTaskDelete(xTaskXHandle);
+    //vTaskEndScheduler();
+    return;
 }
 
 /* ----- Service Routines ----- */
 
 int getCardsLeft(){
     return cards_left;
+}
+
+bool cardRemoved(){
+    if(cards_left > 0){
+        cards_left--;
+        return true;
+    }else{
+        return false;
+    }
 }
 
 int degreesToSteps(int degrees){
