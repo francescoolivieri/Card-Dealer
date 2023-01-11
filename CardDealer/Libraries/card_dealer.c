@@ -154,12 +154,10 @@ void _hwInit()
 
 void TA0_N_IRQHandler(void)  // Timer Interrupt for distance sensor
 {
-    int rising  = 0;
+    rising  = 0;
 
     Timer_A_clearCaptureCompareInterrupt(TIMER_A0_BASE,
             TIMER_A_CAPTURECOMPARE_REGISTER_1);
-
-    printf("OK");
 
     if(P2IN&0x10) rising=1; else rising=0;
 
@@ -172,7 +170,6 @@ void TA0_N_IRQHandler(void)  // Timer Interrupt for distance sensor
     else
     {
         meas2 = Timer_A_getCaptureCompareCount(TIMER_A0_BASE, TIMER_A_CAPTURECOMPARE_REGISTER_1);
-
         if (meas1Count==1){ //if meas1 has been collected
             meas1Count=0; //reset meas1 count
             DS_valueReady(meas1, meas2);
@@ -214,7 +211,7 @@ void ADC14_IRQHandler(void)    // Handler for joystick
     if(status & ADC_INT1){
             resultsBuffer[1] = ADC14_getResult(ADC_MEM1);
             if (!(P4IN & GPIO_PIN1)){
-                joystick_press();
+                //joystick_press();
             }
 
         }
@@ -248,47 +245,45 @@ void PORT5_IRQHandler(void)
 /* -------- --------*/
 
 void makeStep(bool move_forward){
-
-    if(!move_forward){
-        miglior_variabile_del_mondo_in_assoluto_best_in_town_bro_to_the_top_never_stop--;
-        if(miglior_variabile_del_mondo_in_assoluto_best_in_town_bro_to_the_top_never_stop < 0)
+    if(move_forward){
+        miglior_variabile_del_mondo_in_assoluto_best_in_town_bro_to_the_top_never_stop++;
+        miglior_variabile_del_mondo_in_assoluto_best_in_town_bro_to_the_top_never_stop = miglior_variabile_del_mondo_in_assoluto_best_in_town_bro_to_the_top_never_stop%4;
+     }else{
+        if(miglior_variabile_del_mondo_in_assoluto_best_in_town_bro_to_the_top_never_stop == 0)
             miglior_variabile_del_mondo_in_assoluto_best_in_town_bro_to_the_top_never_stop = 3;
+        else
+            miglior_variabile_del_mondo_in_assoluto_best_in_town_bro_to_the_top_never_stop--;
     }
-    printf("%d\n", miglior_variabile_del_mondo_in_assoluto_best_in_town_bro_to_the_top_never_stop);
+    //printf("%d\n", miglior_variabile_del_mondo_in_assoluto_best_in_town_bro_to_the_top_never_stop);
     switch(miglior_variabile_del_mondo_in_assoluto_best_in_town_bro_to_the_top_never_stop){
         case 0:
             GPIO_setOutputHighOnPin(GPIO_PORT_P1, GPIO_PIN7);
             GPIO_setOutputLowOnPin(GPIO_PORT_P5, GPIO_PIN0);
             GPIO_setOutputLowOnPin(GPIO_PORT_P5, GPIO_PIN2);
-            GPIO_setOutputHighOnPin(GPIO_PORT_P3, GPIO_PIN6);
+            GPIO_setOutputLowOnPin(GPIO_PORT_P3, GPIO_PIN6);
 
             break;
         case 1:
             GPIO_setOutputLowOnPin(GPIO_PORT_P1, GPIO_PIN7);
             GPIO_setOutputHighOnPin(GPIO_PORT_P5, GPIO_PIN0);
             GPIO_setOutputLowOnPin(GPIO_PORT_P5, GPIO_PIN2);
-            GPIO_setOutputHighOnPin(GPIO_PORT_P3, GPIO_PIN6);
+            GPIO_setOutputLowOnPin(GPIO_PORT_P3, GPIO_PIN6);
 
             break;
         case 2:
             GPIO_setOutputLowOnPin(GPIO_PORT_P1, GPIO_PIN7);
-            GPIO_setOutputHighOnPin(GPIO_PORT_P5, GPIO_PIN0);
-            GPIO_setOutputHighOnPin(GPIO_PORT_P5, GPIO_PIN2);
-            GPIO_setOutputLowOnPin(GPIO_PORT_P3, GPIO_PIN6);
-
-            break;
-        case 3:
-            GPIO_setOutputHighOnPin(GPIO_PORT_P1, GPIO_PIN7);
             GPIO_setOutputLowOnPin(GPIO_PORT_P5, GPIO_PIN0);
             GPIO_setOutputHighOnPin(GPIO_PORT_P5, GPIO_PIN2);
             GPIO_setOutputLowOnPin(GPIO_PORT_P3, GPIO_PIN6);
 
             break;
-    }
+        case 3:
+            GPIO_setOutputLowOnPin(GPIO_PORT_P1, GPIO_PIN7);
+            GPIO_setOutputLowOnPin(GPIO_PORT_P5, GPIO_PIN0);
+            GPIO_setOutputLowOnPin(GPIO_PORT_P5, GPIO_PIN2);
+            GPIO_setOutputHighOnPin(GPIO_PORT_P3, GPIO_PIN6);
 
-    if(move_forward){
-        miglior_variabile_del_mondo_in_assoluto_best_in_town_bro_to_the_top_never_stop++;
-        miglior_variabile_del_mondo_in_assoluto_best_in_town_bro_to_the_top_never_stop = miglior_variabile_del_mondo_in_assoluto_best_in_town_bro_to_the_top_never_stop%4;
+            break;
     }
 
 }
@@ -319,7 +314,6 @@ void startDelayCaptureDS(){
 void DS_valueReady(int t1, int t2){
     int diff = ((t2 - t1) & 0xFFFF);
     distCM = (diff / 3) / 58; // diff is time in ticks (1 tick is 1/3us) so by dividing diff/3 I find how much time has passed, then I know that the sound makes 1cm every 58us so I divide (timePassed)/58
-
 
     DS_takeVal = true;
 }

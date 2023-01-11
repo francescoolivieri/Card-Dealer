@@ -78,6 +78,7 @@ void _hwInit();
 static int meas1 = 0;
 static int meas2 = 0;
 static int meas1Count=0;
+static int rising;
 void TA0_N_IRQHandler(void);
 void ADC14_IRQHandler(void);
 void PORT3_IRQHandler(void);

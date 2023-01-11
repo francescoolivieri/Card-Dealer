@@ -21,7 +21,7 @@ xQueueHandle q1;
 static const uint32_t uart_baudrate = 115200;
 
 void initLibInterface(); // calls card_dealer init
-int peopleDetection();
+void peopleDetection();
 
 static int numStartingCards = 0;
 void gameSelection();

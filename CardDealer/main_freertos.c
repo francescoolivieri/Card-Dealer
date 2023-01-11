@@ -43,7 +43,7 @@ Graphics_Context g_sContext;
  * Without modification it works exactly like uart_println()
  */
 void uart_println_mutex(const char* str, ...);
-
+void vTaskMain(void *pvParameters);
 
 
 /*-----------------------------------------------------------*/
@@ -51,12 +51,16 @@ int main(void)
 {
     WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;     // stop watchdog timer
 
+
     current_state = IDLE;   // set fsm state to IDLE
 
-    while(1)
-        {
-            (*fsm[current_state].state_function)();
-        }
+    BaseType_t result = pdPASS;
+
+    result = xTaskCreate(vTaskMain, "TaskMain", 1000, NULL, 1, NULL);
+    if (result != pdPASS)   printf("Can't run main task\n");
+
+    // Start the tasks
+    vTaskStartScheduler();
 
     /* The following line should never be reached.
      * Otherwise there was insufficient FreeRTOS heap
@@ -66,10 +70,22 @@ int main(void)
 }
 /*-----------------------------------------------------------*/
 
+void vTaskMain(void *pvParameters)
+{
+    current_state = IDLE;   // set fsm state to IDLE
+
+    while (1)
+    {
+        (*fsm[current_state].state_function)();
+    }
+}
+
 void fn_IDLE(){
     initLibInterface();  // initialize peripherals, clocks, graphics, timers and adc
-    printf("CACCA ASSURDA\n");
     g_sContext = getGraphicsContext();
+
+    //Interrupt_disableInterrupt(ADC14_IRQHandler);
+    Interrupt_disableInterrupt(INT_ADC14);
 
     current_state = WAITING;
     state_transition = true;
@@ -96,7 +112,6 @@ void fn_SCAN(){
         current_state = EMERGENCY_STOP;
     else
         current_state = GAME_SELECTION;
-    state_transition = true;
 }
 
 void fn_GAME_SELECTION(){
@@ -111,7 +126,7 @@ void fn_GAME_SELECTION(){
         current_state = CARD_DISTRIBUTION;
         state_transition = true;
     }*/
-
+    Interrupt_enableInterrupt(INT_ADC14);
     gameSelection();
 
 
@@ -124,6 +139,7 @@ void fn_GAME_SELECTION(){
 
 // EXPAND WORK
 void fn_DISTRIBUTION(){
+    clearEvent();
     distributeCards();
 
     if(getEvent()==BUTTON2_PRESSED){
@@ -144,6 +160,7 @@ void fn_GAME(){
 }
 
 void fn_EMERGENCY_STOP(){
+    Graphics_clearDisplay(&g_sContext);
     resetPosition();
 
     current_state = IDLE;
