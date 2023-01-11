@@ -80,7 +80,6 @@ void gameSelection(){
 }
 
 void distributeCards(){
-    BaseType_t result = pdPASS;
     int i;
 
 
@@ -98,7 +97,7 @@ void distributeCards(){
         }
     }
 
-    resetPosition();
+    //resetPosition();
 }
 
 void startGame(){
@@ -108,16 +107,17 @@ void startGame(){
     while(getCardsLeft()>0 && getEvent()!=BUTTON2_PRESSED){
         for(i=0 ; i<getPeopleNumber() && getEvent()!=BUTTON2_PRESSED ; i++){
             stepParameter pv;
-            pv.steps = getPeoplePosition(i);
+            pv.steps = getPeoplePosition(i) - getHomePosition();
             pv.forward = true;
-            result = xTaskCreate(vTaskStepperMotor, "TaskStepperMotor",1000, (void *)&pv , 1, xTaskXHandle);
+            /*result = xTaskCreate(vTaskStepperMotor, "TaskStepperMotor",1000, (void *)&pv , 1, xTaskXHandle);
             if (result != pdPASS)
             {
                 uart_println("Error creating TaskStepperMotor task.");
             }
 
             while (getEvent() != END_ARRIVED && getEvent() != BUTTON2_PRESSED);
-            vTaskDelete(xTaskXHandle);
+            vTaskDelete(xTaskXHandle);*/
+            moveAnus((void *)&pv);
 
             int DS_mode = DS_GAME_MODE;
             result = xTaskCreate(vTaskDistanceSensor, "TaskDistanceSensor", 1000, (void*)&DS_mode, 1, NULL);
@@ -127,6 +127,7 @@ void startGame(){
             }
 
             while(getEvent() != SKIP && getEvent() != BUTTON2_PRESSED);
+            if(getEvent()==SKIP) clearEvent();
         }
 
         resetPosition();
@@ -171,7 +172,8 @@ void resetPosition(){
      pv.steps = getHomePosition();
      pv.forward = false;
 
-    vTaskStepperMotor( (void*) &pv );
+     moveAnus((void *)&pv);
+    //vTaskStepperMotor( (void*) &pv );
 
     clearHomePosition();
 }

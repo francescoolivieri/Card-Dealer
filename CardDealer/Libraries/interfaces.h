@@ -31,6 +31,12 @@ int getPeoplePosition(int i);
 void incPeopleNumber();
 void setNewPersonPosition(int steps);
 
+
+typedef enum{
+    GAME_MODE,
+    RECOGNITION_MODE
+}task_mode;
+
 // Distance sensor
 #define DS_RECOGNITION_MODE 1
 #define DS_GAME_MODE 2
@@ -39,10 +45,12 @@ void vTaskDistanceSensor(void *pvParameters);
 
 // Step Motor
 #define STEPS_360 2048
+#define SM_RECOGNITION_MODE 1
 
 typedef struct stepParameter{
     bool forward;
     int steps;
+    int mode;
 }stepParameter;
 
 void vTaskStepperMotor(void *pvParameters);
