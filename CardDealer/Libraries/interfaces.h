@@ -62,6 +62,7 @@ bool cardRemoved();
 
 // Distribution
 void distributeCards();
+void moveAnus(void *pvParameters);
 
 // Game
 void startGame();

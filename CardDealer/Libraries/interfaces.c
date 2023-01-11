@@ -83,23 +83,18 @@ void distributeCards(){
     BaseType_t result = pdPASS;
     int i;
 
+
     for(i=getPeopleNumber()-1 ; i>=0 && getEvent()!=BUTTON2_PRESSED ; i--){
         stepParameter pv;
-        pv.steps = getPeoplePosition(i);
+        pv.steps = getHomePosition() - getPeoplePosition(i);
         pv.forward = false;
-        result = xTaskCreate(vTaskStepperMotor, "TaskStepperMotor", 1000, (void*) &pv, 1, NULL);
-        if (result != pdPASS)
-        {
-            uart_println("Error creating TaskStepperMotor task.");
-        }
-
-        while(getEvent() != END_ARRIVED && getEvent() != BUTTON2_PRESSED);
-        printf("FATTA \n");
+        moveAnus((void*) &pv);
+        printf("SUI CASB \n");
 
         int j;
         for(j=0 ; j<numStartingCards && getEvent() != BUTTON2_PRESSED; j++){
             giveOneCard();
-            vTaskDelay(pdMS_TO_TICKS(1000));
+            vTaskDelay(pdMS_TO_TICKS(10000));
         }
     }
 
@@ -115,13 +110,14 @@ void startGame(){
             stepParameter pv;
             pv.steps = getPeoplePosition(i);
             pv.forward = true;
-            result = xTaskCreate(vTaskStepperMotor, "TaskStepperMotor", 1000, (void*) &pv, 1, NULL);
+            result = xTaskCreate(vTaskStepperMotor, "TaskStepperMotor",1000, (void *)&pv , 1, xTaskXHandle);
             if (result != pdPASS)
             {
                 uart_println("Error creating TaskStepperMotor task.");
             }
 
             while (getEvent() != END_ARRIVED && getEvent() != BUTTON2_PRESSED);
+            vTaskDelete(xTaskXHandle);
 
             int DS_mode = DS_GAME_MODE;
             result = xTaskCreate(vTaskDistanceSensor, "TaskDistanceSensor", 1000, (void*)&DS_mode, 1, NULL);
@@ -247,6 +243,29 @@ void vTaskDistanceSensor(void *pvParameters)
     }
 }
 
+
+void moveAnus(void *pvParameters)
+{
+    stepParameter pv = (*((stepParameter *)pvParameters));
+    int cont = 0;
+    //uart_println("Start TaskStepperMotor.");
+
+    int velocity = 300000;
+    while (cont < pv.steps && getEvent()!=BUTTON2_PRESSED)
+    {
+        makeStep(pv.forward);
+
+        vTaskDelay(HZ / velocity);     // delay
+        cont++;
+
+        if(pv.forward)
+            updateHomePosition(1);
+        else
+            updateHomePosition(-1);
+
+    }
+}
+
 /**
  * TaskStepperMotor
  * Make the motor turn
@@ -288,10 +307,13 @@ void vTaskStepperMotor(void *pvParameters)
             }
         }
     }
-    vTaskDelete(xTaskXHandle);
 
     if(getEvent()!=BUTTON2_PRESSED)
-        end_arrive();
+            end_arrive();
+
+
+
+    vTaskDelete(xTaskXHandle);
 
     vTaskDelete(NULL);
 }
@@ -322,7 +344,7 @@ int getHomePosition(){
 void updateHomePosition(int steps){
     homePosition += steps;
 
-    homePosition = homePosition % STEPS_360;
+    homePosition = homePosition ;
 }
 
 void clearHomePosition(){
