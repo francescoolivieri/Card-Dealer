@@ -34,7 +34,8 @@ void setNewPersonPosition(int steps);
 
 typedef enum{
     GAME_MODE,
-    RECOGNITION_MODE
+    RECOGNITION_MODE,
+    STOP_MODE
 }task_mode;
 
 // Distance sensor

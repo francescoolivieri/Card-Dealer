@@ -97,7 +97,6 @@ void distributeCards(){
         int j;
         for(j=0 ; j<numStartingCards && getEvent() != BUTTON2_PRESSED; j++){
             giveOneCard();
-            vTaskDelay(pdMS_TO_TICKS(10000));
         }
     }
 
@@ -151,6 +150,7 @@ void giveOneCard(){
         turnOffDispenser();
 
         cardRemoved();
+        vTaskDelay(pdMS_TO_TICKS(5000));
     }else{
         button2_press();
     }
@@ -162,7 +162,7 @@ void resetPosition(){
     stepParameter pv;
      pv.steps = getHomePosition();
      pv.forward = false;
-     pv.mode = GAME_MODE;
+     pv.mode = STOP_MODE;
 
 
      vTaskStepperMotor( (void*) &pv );
@@ -254,7 +254,7 @@ void vTaskStepperMotor(void *pvParameters)
     //uart_println("Start TaskStepperMotor.");
 
     int velocity = 300000;
-    while (cont < pv.steps && getEvent()!=BUTTON2_PRESSED)
+    while (cont < pv.steps && (getEvent()!=BUTTON2_PRESSED || pv.mode == STOP_MODE))
     {
         makeStep(pv.forward);
 
