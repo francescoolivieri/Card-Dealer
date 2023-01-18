@@ -10,15 +10,9 @@ GEN_OPTS__FLAG :=
 GEN_CMDS__FLAG := 
 
 ORDERED_OBJS += \
-"./HAL_I2C.obj" \
-"./HAL_OPT3001.obj" \
-"./action.obj" \
-"./condition.obj" \
 "./main_freertos.obj" \
 "./startup_msp432p401r_FreeRTOS_ccs.obj" \
 "./system_msp432p401r.obj" \
-"./uart.obj" \
-"./variables.obj" \
 "./FreeRTOS/croutine.obj" \
 "./FreeRTOS/event_groups.obj" \
 "./FreeRTOS/list.obj" \
@@ -30,10 +24,16 @@ ORDERED_OBJS += \
 "./FreeRTOS/portable/MemMang/heap_4.obj" \
 "./LcdDriver/Crystalfontz128x128_ST7735.obj" \
 "./LcdDriver/HAL_MSP_EXP432P401R_Crystalfontz128x128_ST7735.obj" \
+"./Libraries/DefaultLib/HAL_I2C.obj" \
+"./Libraries/DefaultLib/HAL_OPT3001.obj" \
+"./Libraries/DefaultLib/uart.obj" \
+"./Libraries/card_dealer.obj" \
+"./Libraries/events.obj" \
+"./Libraries/interfaces.obj" \
 "../msp432p401r_FreeRTOS.cmd" \
 $(GEN_CMDS__FLAG) \
--l"C:/Users/eddie/OneDrive/Documenti/simplelink_msp432p4_sdk_3_40_01_02/source/ti/grlib/lib/ccs/m4f/grlib.a" \
--l"C:/Users/eddie/OneDrive/Documenti/simplelink_msp432p4_sdk_3_40_01_02/source/ti/devices/msp432p4xx/driverlib/ccs/msp432p4xx_driverlib.lib" \
+-l"C:/Users/Francesco Olivieri/Documents/simplelink_msp432p4_sdk_3_40_01_02/simplelink_msp432p4_sdk_3_40_01_02/source/ti/devices/msp432p4xx/driverlib/ccs/msp432p4xx_driverlib.lib" \
+-l"C:/Users/Francesco Olivieri/Documents/simplelink_msp432p4_sdk_3_40_01_02/simplelink_msp432p4_sdk_3_40_01_02/source/ti/grlib/lib/ccs/m4f/grlib.a" \
 -llibc.a \
 
 -include ../makefile.init
@@ -48,11 +48,15 @@ RMDIR := RMDIR /S/Q
 -include FreeRTOS/portable/CCS/ARM_CM4F/subdir_vars.mk
 -include FreeRTOS/portable/MemMang/subdir_vars.mk
 -include LcdDriver/subdir_vars.mk
+-include Libraries/DefaultLib/subdir_vars.mk
+-include Libraries/subdir_vars.mk
 -include subdir_rules.mk
 -include FreeRTOS/subdir_rules.mk
 -include FreeRTOS/portable/CCS/ARM_CM4F/subdir_rules.mk
 -include FreeRTOS/portable/MemMang/subdir_rules.mk
 -include LcdDriver/subdir_rules.mk
+-include Libraries/DefaultLib/subdir_rules.mk
+-include Libraries/subdir_rules.mk
 -include objects.mk
 
 ifneq ($(MAKECMDGOALS),clean)
@@ -169,7 +173,7 @@ all: $(OBJS) $(CMD_SRCS) $(GEN_CMDS)
 CardDealer.out: $(OBJS) $(CMD_SRCS) $(GEN_CMDS)
 	@echo 'Building target: "$@"'
 	@echo 'Invoking: Arm Linker'
-	"C:/ti/ccs1210/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me --advice:power=all --define=__MSP432P401R__ --define=ccs -g --gcc --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi -z -m"CardDealer.map" --heap_size=1024 --stack_size=512 -i"C:/ti/ccs1210/ccs/ccs_base/arm/include" -i"C:/ti/ccs1210/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/lib" -i"C:/ti/ccs1210/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include" --reread_libs --diag_wrap=off --display_error_number --warn_sections --xml_link_info="CardDealer_linkInfo.xml" --rom_model -o "CardDealer.out" $(ORDERED_OBJS)
+	"C:/ti/ccs1210/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me --advice:power="all" --define=__MSP432P401R__ --define=ccs -g --gcc --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi -z -m"CardDealer.map" --heap_size=1024 --stack_size=512 -i"C:/ti/ccs1210/ccs/ccs_base/arm/include" -i"C:/ti/ccs1210/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/lib" -i"C:/ti/ccs1210/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include" --reread_libs --diag_wrap=off --display_error_number --warn_sections --xml_link_info="CardDealer_linkInfo.xml" --rom_model -o "CardDealer.out" $(ORDERED_OBJS)
 	@echo 'Finished building target: "$@"'
 	@echo ' '
 
@@ -183,8 +187,8 @@ CardDealer.hex: $(EXE_OUTPUTS)
 # Other Targets
 clean:
 	-$(RM) $(BIN_OUTPUTS__QUOTED)$(EXE_OUTPUTS__QUOTED)
-	-$(RM) "HAL_I2C.obj" "HAL_OPT3001.obj" "action.obj" "condition.obj" "main_freertos.obj" "startup_msp432p401r_FreeRTOS_ccs.obj" "system_msp432p401r.obj" "uart.obj" "variables.obj" "FreeRTOS\croutine.obj" "FreeRTOS\event_groups.obj" "FreeRTOS\list.obj" "FreeRTOS\queue.obj" "FreeRTOS\tasks.obj" "FreeRTOS\timers.obj" "FreeRTOS\portable\CCS\ARM_CM4F\port.obj" "FreeRTOS\portable\CCS\ARM_CM4F\portasm.obj" "FreeRTOS\portable\MemMang\heap_4.obj" "LcdDriver\Crystalfontz128x128_ST7735.obj" "LcdDriver\HAL_MSP_EXP432P401R_Crystalfontz128x128_ST7735.obj" 
-	-$(RM) "HAL_I2C.d" "HAL_OPT3001.d" "action.d" "condition.d" "main_freertos.d" "startup_msp432p401r_FreeRTOS_ccs.d" "system_msp432p401r.d" "uart.d" "variables.d" "FreeRTOS\croutine.d" "FreeRTOS\event_groups.d" "FreeRTOS\list.d" "FreeRTOS\queue.d" "FreeRTOS\tasks.d" "FreeRTOS\timers.d" "FreeRTOS\portable\CCS\ARM_CM4F\port.d" "FreeRTOS\portable\MemMang\heap_4.d" "LcdDriver\Crystalfontz128x128_ST7735.d" "LcdDriver\HAL_MSP_EXP432P401R_Crystalfontz128x128_ST7735.d" 
+	-$(RM) "main_freertos.obj" "startup_msp432p401r_FreeRTOS_ccs.obj" "system_msp432p401r.obj" "FreeRTOS\croutine.obj" "FreeRTOS\event_groups.obj" "FreeRTOS\list.obj" "FreeRTOS\queue.obj" "FreeRTOS\tasks.obj" "FreeRTOS\timers.obj" "FreeRTOS\portable\CCS\ARM_CM4F\port.obj" "FreeRTOS\portable\CCS\ARM_CM4F\portasm.obj" "FreeRTOS\portable\MemMang\heap_4.obj" "LcdDriver\Crystalfontz128x128_ST7735.obj" "LcdDriver\HAL_MSP_EXP432P401R_Crystalfontz128x128_ST7735.obj" "Libraries\DefaultLib\HAL_I2C.obj" "Libraries\DefaultLib\HAL_OPT3001.obj" "Libraries\DefaultLib\uart.obj" "Libraries\card_dealer.obj" "Libraries\events.obj" "Libraries\interfaces.obj" 
+	-$(RM) "main_freertos.d" "startup_msp432p401r_FreeRTOS_ccs.d" "system_msp432p401r.d" "FreeRTOS\croutine.d" "FreeRTOS\event_groups.d" "FreeRTOS\list.d" "FreeRTOS\queue.d" "FreeRTOS\tasks.d" "FreeRTOS\timers.d" "FreeRTOS\portable\CCS\ARM_CM4F\port.d" "FreeRTOS\portable\MemMang\heap_4.d" "LcdDriver\Crystalfontz128x128_ST7735.d" "LcdDriver\HAL_MSP_EXP432P401R_Crystalfontz128x128_ST7735.d" "Libraries\DefaultLib\HAL_I2C.d" "Libraries\DefaultLib\HAL_OPT3001.d" "Libraries\DefaultLib\uart.d" "Libraries\card_dealer.d" "Libraries\events.d" "Libraries\interfaces.d" 
 	-$(RM) "FreeRTOS\portable\CCS\ARM_CM4F\portasm.d" 
 	-@echo 'Finished clean'
 	-@echo ' '
