@@ -30,11 +30,12 @@ void peopleDetection(){
     Graphics_drawStringCentered(&g_sContext, (int8_t*) "Scanning people",AUTO_STRING_LENGTH, 64, 30, OPAQUE_TEXT);
 
     // SETUP TASK STEPPER MOTOR
-    stepParameter pv;
-    pv.forward = true;
-    pv.steps = degreesToSteps(360);
+    stepParameter SM_param;
+    SM_param.forward = true;
+    SM_param.steps = degreesToSteps(360);
+    SM_param.mode = RECOGNITION_MODE;
 
-    result = xTaskCreate(vTaskStepperMotor, "TaskStepperMotor", 1000, (void*) &pv, 1, NULL);
+    result = xTaskCreate(vTaskStepperMotor, "TaskStepperMotor", 1000, (void*) &SM_param, 1, NULL);
     if (result != pdPASS)
     {
         uart_println("Error creating TaskStepperMotor task.");
@@ -42,8 +43,8 @@ void peopleDetection(){
 
 
     // SETUP TASK DISTANCE SENSOR
-    int pcParameters2 = DS_RECOGNITION_MODE;
-    result = xTaskCreate(vTaskDistanceSensor, "TaskDistanceSensor", 1000, (void*) &pcParameters2, 1, &xTaskXHandle);
+    task_mode DS_param = RECOGNITION_MODE;
+    result = xTaskCreate(vTaskDistanceSensor, "TaskDistanceSensor", 1000, (void*) &DS_param, 1, &xTaskXHandle);
     if (result != pdPASS)
     {
         uart_println("Error creating TaskDistanceSensor task.");
@@ -51,9 +52,11 @@ void peopleDetection(){
 
     while(getEvent() != END_ARRIVED && getEvent() != BUTTON2_PRESSED);
 
+    /*
     char string[20];
     sprintf(string, "Players : %d \n PINUS", getPeopleNumber());
     Graphics_drawStringCentered(&g_sContext,(int8_t *)string, 8, 64, 70, OPAQUE_TEXT);
+    */
 
     vTaskDelay(pdMS_TO_TICKS(50000));
 
@@ -64,7 +67,7 @@ void gameSelection(){
     Graphics_clearDisplay(&g_sContext);
 
     while(getEvent() != BUTTON1_PRESSED && getEvent() != BUTTON2_PRESSED){
-        if(getEvent() == JOYSTICK_UP){
+        if(getEvent() == JOYSTICK_UP && (numStartingCards*contPeople)<cards_left){
             numStartingCards++;
             clearEvent();
         }else if(getEvent() == JOYSTICK_DOWN){
@@ -84,11 +87,12 @@ void distributeCards(){
 
 
     for(i=getPeopleNumber()-1 ; i>=0 && getEvent()!=BUTTON2_PRESSED ; i--){
-        stepParameter pv;
-        pv.steps = getHomePosition() - getPeoplePosition(i);
-        pv.forward = false;
-        moveAnus((void*) &pv);
-        printf("SUI CASB \n");
+        stepParameter SM_param;
+        SM_param.steps = getHomePosition() - getPeoplePosition(i);
+        SM_param.forward = false;
+        SM_param.mode = GAME_MODE;
+
+        vTaskStepperMotor((void *)&SM_param);
 
         int j;
         for(j=0 ; j<numStartingCards && getEvent() != BUTTON2_PRESSED; j++){
@@ -101,7 +105,6 @@ void distributeCards(){
 }
 
 void startGame(){
-    BaseType_t result = pdPASS;
     int i;
 
     while(getCardsLeft()>0 && getEvent()!=BUTTON2_PRESSED){
@@ -109,25 +112,13 @@ void startGame(){
             stepParameter pv;
             pv.steps = getPeoplePosition(i) - getHomePosition();
             pv.forward = true;
-            /*result = xTaskCreate(vTaskStepperMotor, "TaskStepperMotor",1000, (void *)&pv , 1, xTaskXHandle);
-            if (result != pdPASS)
-            {
-                uart_println("Error creating TaskStepperMotor task.");
-            }
+            pv.mode = GAME_MODE;
 
-            while (getEvent() != END_ARRIVED && getEvent() != BUTTON2_PRESSED);
-            vTaskDelete(xTaskXHandle);*/
-            moveAnus((void *)&pv);
+            vTaskStepperMotor((void *)&pv);
 
-            int DS_mode = DS_GAME_MODE;
-            result = xTaskCreate(vTaskDistanceSensor, "TaskDistanceSensor", 1000, (void*)&DS_mode, 1, NULL);
-            if (result != pdPASS)
-            {
-                uart_println("Error creating TaskDistanceSensor task.");
-            }
+            task_mode DS_mode = GAME_MODE;
+            vTaskDistanceSensor((void *)&DS_mode);
 
-            while(getEvent() != SKIP && getEvent() != BUTTON2_PRESSED);
-            if(getEvent()==SKIP) clearEvent();
         }
 
         resetPosition();
@@ -171,9 +162,10 @@ void resetPosition(){
     stepParameter pv;
      pv.steps = getHomePosition();
      pv.forward = false;
+     pv.mode = GAME_MODE;
 
-     moveAnus((void *)&pv);
-    //vTaskStepperMotor( (void*) &pv );
+
+     vTaskStepperMotor( (void*) &pv );
 
     clearHomePosition();
 }
@@ -190,14 +182,14 @@ void vTaskDistanceSensor(void *pvParameters)
 {
     uart_println("Start TaskDistanceSensor.");
     int count = 0;
-    int DS_mode = (*((int *)pvParameters));
+    task_mode DS_mode = (*((task_mode *)pvParameters));
 
     initTriggerDS();
     startDelayCaptureDS();
 
     while (1) {
-        if(DS_mode==DS_GAME_MODE && getEvent()==SKIP)
-           vTaskDelete(NULL);
+        if((DS_mode==GAME_MODE && getEvent()==SKIP) || (DS_mode==GAME_MODE && getEvent()==BUTTON2_PRESSED))
+           break;
 
         sendTrigPulseDS();
         //vTaskDelay(HZ / 8);     // delay
@@ -213,7 +205,7 @@ void vTaskDistanceSensor(void *pvParameters)
             printf("Distance: %i cm \n", distCM);
 
 
-            if(DS_mode == DS_RECOGNITION_MODE){ // recognition mode
+            if(DS_mode == RECOGNITION_MODE){ // recognition mode
                 if(distCM<DS_MAX_DISTANCE_DETECT){
                     count++;
 
@@ -225,7 +217,7 @@ void vTaskDistanceSensor(void *pvParameters)
                 }else{
                     count = 0;
                 }
-            }else if(DS_mode == DS_GAME_MODE){
+            }else if(DS_mode == GAME_MODE){
                 if(distCM<DS_MAX_DISTANCE_DETECT){
                     count++;
 
@@ -243,30 +235,11 @@ void vTaskDistanceSensor(void *pvParameters)
             }
         }
     }
+
+    if(getEvent()==SKIP) clearEvent();
 }
 
 
-void moveAnus(void *pvParameters)
-{
-    stepParameter pv = (*((stepParameter *)pvParameters));
-    int cont = 0;
-    //uart_println("Start TaskStepperMotor.");
-
-    int velocity = 300000;
-    while (cont < pv.steps && getEvent()!=BUTTON2_PRESSED)
-    {
-        makeStep(pv.forward);
-
-        vTaskDelay(HZ / velocity);     // delay
-        cont++;
-
-        if(pv.forward)
-            updateHomePosition(1);
-        else
-            updateHomePosition(-1);
-
-    }
-}
 
 /**
  * TaskStepperMotor
@@ -293,10 +266,8 @@ void vTaskStepperMotor(void *pvParameters)
         else
             updateHomePosition(-1);
 
-        //int msg;
-        //if(xQueueReceive(q1, &(msg), 0)){  // EVENT
-        if(getEvent() == PERSON_DETECTED){
-            //printf("DETECTED at %d steps \n", cont);
+
+        if(getEvent() == PERSON_DETECTED && pv.mode == RECOGNITION_MODE){
             clearEvent();
             if(getPeopleNumber() < 8){
                 setNewPersonPosition(cont-1);
@@ -314,10 +285,11 @@ void vTaskStepperMotor(void *pvParameters)
             end_arrive();
 
 
+    if(pv.mode == RECOGNITION_MODE){
+        vTaskDelete(xTaskXHandle);
 
-    vTaskDelete(xTaskXHandle);
-
-    vTaskDelete(NULL);
+        vTaskDelete(NULL);
+    }
 }
 
 /* ----- Service Routines ----- */

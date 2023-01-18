@@ -50,7 +50,7 @@ void vTaskDistanceSensor(void *pvParameters);
 typedef struct stepParameter{
     bool forward;
     int steps;
-    int mode;
+    task_mode mode;
 }stepParameter;
 
 void vTaskStepperMotor(void *pvParameters);
@@ -70,7 +70,6 @@ bool cardRemoved();
 
 // Distribution
 void distributeCards();
-void moveAnus(void *pvParameters);
 
 // Game
 void startGame();
