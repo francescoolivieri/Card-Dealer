@@ -70,6 +70,14 @@ int main(void)
 }
 /*-----------------------------------------------------------*/
 
+/*---------SCREEN FUNCTIONS----------------*/
+
+
+
+
+
+/*-------------------------*/
+
 void vTaskMain(void *pvParameters)
 {
     current_state = IDLE;   // set fsm state to IDLE
@@ -93,7 +101,9 @@ void fn_IDLE(){
 
 void fn_WAITING(){
     if(state_transition){
-        Graphics_drawStringCentered(&g_sContext,(int8_t *)"Waiting State,\n press Joystick", AUTO_STRING_LENGTH, 64, 30, OPAQUE_TEXT);
+
+        screen_start_game(g_sContext);
+
         clearEvent();
         state_transition = false;
     }

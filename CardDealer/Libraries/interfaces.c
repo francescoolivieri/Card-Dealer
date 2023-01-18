@@ -6,6 +6,7 @@
  */
 #include "interfaces.h"
 
+
 void initLibInterface(){
     // Initialize Queuexcx
     /*
@@ -26,8 +27,7 @@ void peopleDetection(){
     BaseType_t result = pdPASS;
 
     // set-up display
-    Graphics_clearDisplay(&g_sContext);
-    Graphics_drawStringCentered(&g_sContext, (int8_t*) "Scanning people",AUTO_STRING_LENGTH, 64, 30, OPAQUE_TEXT);
+    screen_center_string(g_sContext, "Scanning...");
 
     // SETUP TASK STEPPER MOTOR
     stepParameter SM_param;
@@ -58,6 +58,8 @@ void peopleDetection(){
     Graphics_drawStringCentered(&g_sContext,(int8_t *)string, 8, 64, 70, OPAQUE_TEXT);
     */
 
+
+
     vTaskDelay(pdMS_TO_TICKS(50000));
 
 
@@ -76,17 +78,20 @@ void gameSelection(){
             clearEvent();
         }
 
-        char string[10];
-        sprintf(string, "%d", numStartingCards);
-        Graphics_drawStringCentered(&g_sContext,(int8_t *)string, 8, 64, 70, OPAQUE_TEXT);
+
+        screen_selecting_cards(g_sContext, numStartingCards, getPeopleNumber());
     }
 }
 
 void distributeCards(){
     int i;
-
+    Graphics_clearDisplay(&g_sContext);
 
     for(i=getPeopleNumber()-1 ; i>=0 && getEvent()!=BUTTON2_PRESSED ; i--){
+
+        //screen_card_distribution(g_sContext, i, 3); //we need to do a function to make count cards
+        screen_center_string(g_sContext, "distributing...");
+
         stepParameter SM_param;
         SM_param.steps = getHomePosition() - getPeoplePosition(i);
         SM_param.forward = false;
@@ -98,6 +103,7 @@ void distributeCards(){
         for(j=0 ; j<numStartingCards && getEvent() != BUTTON2_PRESSED; j++){
             giveOneCard();
         }
+
     }
 
     //resetPosition();
@@ -105,9 +111,13 @@ void distributeCards(){
 
 void startGame(){
     int i;
+    Graphics_clearDisplay(&g_sContext);
 
     while(getCardsLeft()>0 && getEvent()!=BUTTON2_PRESSED){
         for(i=0 ; i<getPeopleNumber() && getEvent()!=BUTTON2_PRESSED ; i++){
+
+            screen_card_distribution(g_sContext, i, 3); //we need to do a function to make count cards
+
             stepParameter pv;
             pv.steps = getPeoplePosition(i) - getHomePosition();
             pv.forward = true;
@@ -124,8 +134,7 @@ void startGame(){
     }
 
     if(getCardsLeft() == 0){
-        char string[20] = "Finie le carte caro";
-        Graphics_drawStringCentered(&g_sContext, (int8_t*) string, 15, 64, 70, OPAQUE_TEXT);
+        screen_center_string(g_sContext, "cards finished!");
     }
 }
 
@@ -265,7 +274,6 @@ void vTaskStepperMotor(void *pvParameters)
             updateHomePosition(1);
         else
             updateHomePosition(-1);
-
 
         if(getEvent() == PERSON_DETECTED && pv.mode == RECOGNITION_MODE){
             clearEvent();
