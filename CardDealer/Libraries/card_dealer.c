@@ -51,9 +51,17 @@ void _graphicsInit()
 
     /* Initializes graphics context */
     Graphics_initContext(&g_sContext, &g_sCrystalfontz128x128, &g_sCrystalfontz128x128_funcs);
-    Graphics_setForegroundColor(&g_sContext, GRAPHICS_COLOR_RED);
-    Graphics_setBackgroundColor(&g_sContext, GRAPHICS_COLOR_WHITE);
-    GrContextFontSet(&g_sContext, &g_sFontFixed6x8);
+    Graphics_setForegroundColor(&g_sContext, GRAPHICS_COLOR_WHITE);
+    Graphics_setBackgroundColor(&g_sContext, GRAPHICS_COLOR_BLACK);
+    //GrContextFontSet(&g_sContext, &g_sFontFixed6x8);
+    //GrContextFontSet(&g_sContext, &g_sFontCmtt12);
+    GrContextFontSet(&g_sContext, &g_sFontCmsc12); //carino
+    //GrContextFontSet(&g_sContext, &g_sFontCmtt12);
+
+
+
+
+
     Graphics_clearDisplay(&g_sContext);
     Graphics_drawStringCentered(&g_sContext,
                                             (int8_t *)"Waiting to start :",
@@ -368,6 +376,8 @@ void turnOffBuzzer(){
     Interrupt_enableInterrupt(INT_TA0_N);
 
 }
+
+//the following are important functions (not extra)
 
 void turnOnDispenserForward(){
     GPIO_setOutputHighOnPin(GPIO_PORT_P4, GPIO_PIN1);

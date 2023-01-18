@@ -2,6 +2,7 @@
 #define LIBRARIES_INTERFACES_H_
 
 #include "card_dealer.h"
+#include "screens.h"
 #include <FreeRTOS.h>
 #include <uart.h>
 #include <queue.h>
