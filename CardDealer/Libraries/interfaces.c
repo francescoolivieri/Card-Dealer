@@ -8,13 +8,6 @@
 
 
 void initLibInterface(){
-    // Initialize Queuexcx
-    /*
-    int msg;
-    q1 = xQueueCreate(MAX_QUEUE_SIZE, sizeof(msg));
-    if (!q1)
-        printf("Problems opening queue\n");
-        */
 
     // Initialize UART
     uart_init(uart_baudrate);
@@ -50,29 +43,19 @@ void peopleDetection(){
         uart_println("Error creating TaskDistanceSensor task.");
     }
 
-    while(getEvent() != END_ARRIVED && getEvent() != BUTTON2_PRESSED);
-
-    /*
-    char string[20];
-    sprintf(string, "Players : %d \n PINUS", getPeopleNumber());
-    Graphics_drawStringCentered(&g_sContext,(int8_t *)string, 8, 64, 70, OPAQUE_TEXT);
-    */
-
-
-
-    vTaskDelay(pdMS_TO_TICKS(50000));
-
+    while(getEvent() != END_ARRIVED && getEvent() != BUTTON2_PRESSED); // wait for end of scanning
 
 }
 
 void gameSelection(){
     Graphics_clearDisplay(&g_sContext);
+    numStartingCards = 0;
 
     while(getEvent() != BUTTON1_PRESSED && getEvent() != BUTTON2_PRESSED){
-        if(getEvent() == JOYSTICK_UP && (numStartingCards*contPeople)<cards_left){
+        if(getEvent() == JOYSTICK_UP && (numStartingCards*contPeople)<cards_left){  // increment
             numStartingCards++;
             clearEvent();
-        }else if(getEvent() == JOYSTICK_DOWN){
+        }else if(getEvent() == JOYSTICK_DOWN){ // decrement
             if(numStartingCards > 0)
                 numStartingCards--;
             clearEvent();
@@ -89,24 +72,23 @@ void distributeCards(){
 
     for(i=getPeopleNumber()-1 ; i>=0 && getEvent()!=BUTTON2_PRESSED ; i--){
 
-        //screen_card_distribution(g_sContext, i, 3); //we need to do a function to make count cards
+
         screen_center_string(g_sContext, "distributing...");
 
         stepParameter SM_param;
-        SM_param.steps = getHomePosition() - getPeoplePosition(i);
+        SM_param.steps = getHomeDistance() - getPeoplePosition(i); // distance from home pos - distance between home pos and the i-th person
         SM_param.forward = false;
         SM_param.mode = GAME_MODE;
 
         vTaskStepperMotor((void *)&SM_param);
 
         int j;
-        for(j=0 ; j<numStartingCards && getEvent() != BUTTON2_PRESSED; j++){
+        for(j=0 ; j<numStartingCards && getEvent() != BUTTON2_PRESSED; j++){  // give cards
             giveOneCard();
         }
 
     }
 
-    //resetPosition();
 }
 
 void startGame(){
@@ -116,10 +98,10 @@ void startGame(){
     while(getCardsLeft()>0 && getEvent()!=BUTTON2_PRESSED){
         for(i=0 ; i<getPeopleNumber() && getEvent()!=BUTTON2_PRESSED ; i++){
 
-            screen_card_distribution(g_sContext, i, 3); //we need to do a function to make count cards
+            screen_card_distribution(g_sContext, i+1, getCardsLeft()); //we need to do a function to make count cards
 
             stepParameter pv;
-            pv.steps = getPeoplePosition(i) - getHomePosition();
+            pv.steps = getPeoplePosition(i) - getHomeDistance();
             pv.forward = true;
             pv.mode = GAME_MODE;
 
@@ -134,6 +116,7 @@ void startGame(){
     }
 
     if(getCardsLeft() == 0){
+        Graphics_clearDisplay(&g_sContext);
         screen_center_string(g_sContext, "cards finished!");
     }
 }
@@ -142,8 +125,8 @@ void giveOneCard(){
 
     if(getCardsLeft()>0){
         float scaleFactor = 1000000;
-        float spinForwardTime = 0.015;
-        float spinBackwardsTime = 0.008;
+        float spinForwardTime = 0.075;
+        float spinBackwardsTime = 0.05;
 
         /*wheel spins forward to give the card*/
         Timer32_setCount(TIMER32_1_BASE, 24 * scaleFactor*spinForwardTime); // multiply by 24 -> 1 us *
@@ -158,6 +141,8 @@ void giveOneCard(){
         /*motor is turned off*/
         turnOffDispenser();
 
+
+
         cardRemoved();
         vTaskDelay(pdMS_TO_TICKS(5000));
     }else{
@@ -169,7 +154,7 @@ void giveOneCard(){
 void resetPosition(){
 
     stepParameter pv;
-     pv.steps = getHomePosition();
+     pv.steps = getHomeDistance();
      pv.forward = false;
      pv.mode = STOP_MODE;
 
@@ -191,6 +176,7 @@ void vTaskDistanceSensor(void *pvParameters)
 {
     uart_println("Start TaskDistanceSensor.");
     int count = 0;
+    int count_out = 0;
     task_mode DS_mode = (*((task_mode *)pvParameters));
 
     initTriggerDS();
@@ -205,17 +191,18 @@ void vTaskDistanceSensor(void *pvParameters)
         vTaskDelay(pdMS_TO_TICKS(500));
 
         fflush(stdout);
-        //vTaskDelay(pdMS_TO_TICKS(500));
+
         if (DS_isValueReady() == true)
         {
             fflush(stdout);
             int distCM = DS_getDistCM();
             DS_valueRead();
             printf("Distance: %i cm \n", distCM);
+            fflush(stdout);
 
 
             if(DS_mode == RECOGNITION_MODE){ // recognition mode
-                if(distCM<DS_MAX_DISTANCE_DETECT){
+                if(distCM<DS_MAX_DISTANCE_DETECT && distCM > 5){
                     count++;
 
                     if(count == 4){
@@ -227,16 +214,22 @@ void vTaskDistanceSensor(void *pvParameters)
                     count = 0;
                 }
             }else if(DS_mode == GAME_MODE){
-                if(distCM<DS_MAX_DISTANCE_DETECT){
-                    count++;
+                if((distCM<DS_MAX_DISTANCE_DETECT && distCM>=5) || count_out < 1){ // had to do this due to sensor inaccuracy
+                    if(distCM < DS_MAX_DISTANCE_DETECT)
+                        count++;
+                    else
+                        count_out++;
+
 
                     if(count == 24){
                         skip();
                     }
                 }else{
-                    if(count > 12){
-                        give_card();  // can be removed
+                    count_out = 0;
+
+                    if(count > 8){
                         giveOneCard();
+                        screen_card_distribution(g_sContext, get_number_player(), getCardsLeft());
                     }
 
                     count = 0;
@@ -319,7 +312,7 @@ int degreesToSteps(int degrees){
     return (STEPS_360/(360 / degrees));
 }
 
-int getHomePosition(){
+int getHomeDistance(){
     return homePosition;
 }
 

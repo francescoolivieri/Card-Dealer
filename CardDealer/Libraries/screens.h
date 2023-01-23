@@ -16,14 +16,17 @@
 #include <ti/devices/msp432p4xx/driverlib/driverlib.h>
 #include <string.h>
 #include "events.h"
+#include <FreeRTOS.h>
 
-
+static int number_player = 0;
 
 void screen_start_game(Graphics_Context context);
 void screen_scanning(Graphics_Context context);
 void screen_selecting_cards(Graphics_Context context, int n_cards, int n_people);
 void screen_center_string(Graphics_Context context, char *string);
 void screen_card_distribution(Graphics_Context context, int n_people, int n_cards);
+int get_number_player();
+void screen_continue(Graphics_Context context);
 
 
 

@@ -12,12 +12,16 @@ void screen_start_game(Graphics_Context context){
 
     Graphics_clearDisplay(&context);
 
-    Graphics_drawStringCentered(&context,(int8_t *)"Press 2   =>", AUTO_STRING_LENGTH, 64, 10, OPAQUE_TEXT);
+    Graphics_drawStringCentered(&context,(int8_t *)"Button2   =>", AUTO_STRING_LENGTH, 64, 10, OPAQUE_TEXT);
     Graphics_drawStringCentered(&context,(int8_t *)"to Stop ", AUTO_STRING_LENGTH, 64, 20, OPAQUE_TEXT);
 
 
-    Graphics_drawStringCentered(&context,(int8_t *)"BUTTON1   =>", AUTO_STRING_LENGTH, 64, 60, OPAQUE_TEXT);
+    Graphics_drawStringCentered(&context,(int8_t *)"Button1   =>", AUTO_STRING_LENGTH, 64, 60, OPAQUE_TEXT);
     Graphics_drawStringCentered(&context,(int8_t *)"to Start", AUTO_STRING_LENGTH, 64, 70, OPAQUE_TEXT);
+
+    vTaskDelay(pdMS_TO_TICKS(20000));
+
+    screen_continue(context);
 }
 
 void screen_scanning(Graphics_Context context){
@@ -45,14 +49,28 @@ void screen_center_string(Graphics_Context context, char *string){
 }
 
 void screen_card_distribution(Graphics_Context context, int n_people, int n_cards){
-
+    number_player = n_people;
     char string[20];
     sprintf(string, "Player: %d", n_people);
 
     Graphics_drawStringCentered(&context,(int8_t *) string, AUTO_STRING_LENGTH, 64, 30, OPAQUE_TEXT);
 
-    sprintf(string, "Cards left: X/30");
+    sprintf(string, "Cards left: %d/30", n_cards);
     Graphics_drawStringCentered(&context,(int8_t *) string, AUTO_STRING_LENGTH, 64, 50, OPAQUE_TEXT);
+}
+
+int get_number_player(){
+    return number_player;
+}
+
+void screen_continue(Graphics_Context context){
+
+    Graphics_clearDisplay(&context);
+
+    Graphics_drawStringCentered(&context,(int8_t *)"WELCOME!", AUTO_STRING_LENGTH, 64, 40, OPAQUE_TEXT);
+    Graphics_drawStringCentered(&context,(int8_t *)"Press", AUTO_STRING_LENGTH, 64, 50, OPAQUE_TEXT);
+    Graphics_drawStringCentered(&context,(int8_t *)"Button1   =>", AUTO_STRING_LENGTH, 64, 60, OPAQUE_TEXT);
+    Graphics_drawStringCentered(&context,(int8_t *)"to Start", AUTO_STRING_LENGTH, 64, 70, OPAQUE_TEXT);
 }
 
 

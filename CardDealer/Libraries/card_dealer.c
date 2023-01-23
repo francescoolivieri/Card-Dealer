@@ -63,12 +63,6 @@ void _graphicsInit()
 
 
     Graphics_clearDisplay(&g_sContext);
-    Graphics_drawStringCentered(&g_sContext,
-                                            (int8_t *)"Waiting to start :",
-                                            AUTO_STRING_LENGTH,
-                                            64,
-                                            30,
-                                            OPAQUE_TEXT);
 
 }
 
@@ -92,11 +86,11 @@ void initDispenserMotor(){
         WDT_A_holdTimer();
 
     /* Configuring output */
-    GPIO_setAsOutputPin(GPIO_PORT_P4, GPIO_PIN3);
-    GPIO_setOutputLowOnPin(GPIO_PORT_P4, GPIO_PIN3);
+    GPIO_setAsOutputPin(GPIO_PORT_P4, GPIO_PIN0);
+    GPIO_setOutputLowOnPin(GPIO_PORT_P4, GPIO_PIN0);
 
-    GPIO_setAsOutputPin(GPIO_PORT_P4, GPIO_PIN1);
-    GPIO_setOutputLowOnPin(GPIO_PORT_P4, GPIO_PIN1);
+    GPIO_setAsOutputPin(GPIO_PORT_P6, GPIO_PIN1);
+    GPIO_setOutputLowOnPin(GPIO_PORT_P6, GPIO_PIN1);
 
     /* Starting the Timer32 */
        Timer32_initModule(TIMER32_1_BASE, TIMER32_PRESCALER_1, TIMER32_32BIT,TIMER32_PERIODIC_MODE); // uses MCLK
@@ -380,16 +374,16 @@ void turnOffBuzzer(){
 //the following are important functions (not extra)
 
 void turnOnDispenserForward(){
-    GPIO_setOutputHighOnPin(GPIO_PORT_P4, GPIO_PIN1);
-    GPIO_setOutputLowOnPin(GPIO_PORT_P4, GPIO_PIN3);
+    GPIO_setOutputHighOnPin(GPIO_PORT_P6, GPIO_PIN1);
+    GPIO_setOutputLowOnPin(GPIO_PORT_P4, GPIO_PIN0);
 }
 
 void turnOnDispenserBackward(){
-    GPIO_setOutputLowOnPin(GPIO_PORT_P4, GPIO_PIN1);
-    GPIO_setOutputHighOnPin(GPIO_PORT_P4, GPIO_PIN3);
+    GPIO_setOutputLowOnPin(GPIO_PORT_P6, GPIO_PIN1);
+    GPIO_setOutputHighOnPin(GPIO_PORT_P4, GPIO_PIN0);
 }
 
 void turnOffDispenser(){
-    GPIO_setOutputLowOnPin(GPIO_PORT_P4, GPIO_PIN3);
-    GPIO_setOutputLowOnPin(GPIO_PORT_P4, GPIO_PIN1);
+    GPIO_setOutputLowOnPin(GPIO_PORT_P4, GPIO_PIN0);
+    GPIO_setOutputLowOnPin(GPIO_PORT_P6, GPIO_PIN1);
 }

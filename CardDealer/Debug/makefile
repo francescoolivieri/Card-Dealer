@@ -30,6 +30,7 @@ ORDERED_OBJS += \
 "./Libraries/card_dealer.obj" \
 "./Libraries/events.obj" \
 "./Libraries/interfaces.obj" \
+"./Libraries/screens.obj" \
 "../msp432p401r_FreeRTOS.cmd" \
 $(GEN_CMDS__FLAG) \
 -l"C:/Users/Francesco Olivieri/Documents/simplelink_msp432p4_sdk_3_40_01_02/simplelink_msp432p4_sdk_3_40_01_02/source/ti/devices/msp432p4xx/driverlib/ccs/msp432p4xx_driverlib.lib" \
@@ -187,8 +188,8 @@ CardDealer.hex: $(EXE_OUTPUTS)
 # Other Targets
 clean:
 	-$(RM) $(BIN_OUTPUTS__QUOTED)$(EXE_OUTPUTS__QUOTED)
-	-$(RM) "main_freertos.obj" "startup_msp432p401r_FreeRTOS_ccs.obj" "system_msp432p401r.obj" "FreeRTOS\croutine.obj" "FreeRTOS\event_groups.obj" "FreeRTOS\list.obj" "FreeRTOS\queue.obj" "FreeRTOS\tasks.obj" "FreeRTOS\timers.obj" "FreeRTOS\portable\CCS\ARM_CM4F\port.obj" "FreeRTOS\portable\CCS\ARM_CM4F\portasm.obj" "FreeRTOS\portable\MemMang\heap_4.obj" "LcdDriver\Crystalfontz128x128_ST7735.obj" "LcdDriver\HAL_MSP_EXP432P401R_Crystalfontz128x128_ST7735.obj" "Libraries\DefaultLib\HAL_I2C.obj" "Libraries\DefaultLib\HAL_OPT3001.obj" "Libraries\DefaultLib\uart.obj" "Libraries\card_dealer.obj" "Libraries\events.obj" "Libraries\interfaces.obj" 
-	-$(RM) "main_freertos.d" "startup_msp432p401r_FreeRTOS_ccs.d" "system_msp432p401r.d" "FreeRTOS\croutine.d" "FreeRTOS\event_groups.d" "FreeRTOS\list.d" "FreeRTOS\queue.d" "FreeRTOS\tasks.d" "FreeRTOS\timers.d" "FreeRTOS\portable\CCS\ARM_CM4F\port.d" "FreeRTOS\portable\MemMang\heap_4.d" "LcdDriver\Crystalfontz128x128_ST7735.d" "LcdDriver\HAL_MSP_EXP432P401R_Crystalfontz128x128_ST7735.d" "Libraries\DefaultLib\HAL_I2C.d" "Libraries\DefaultLib\HAL_OPT3001.d" "Libraries\DefaultLib\uart.d" "Libraries\card_dealer.d" "Libraries\events.d" "Libraries\interfaces.d" 
+	-$(RM) "main_freertos.obj" "startup_msp432p401r_FreeRTOS_ccs.obj" "system_msp432p401r.obj" "FreeRTOS\croutine.obj" "FreeRTOS\event_groups.obj" "FreeRTOS\list.obj" "FreeRTOS\queue.obj" "FreeRTOS\tasks.obj" "FreeRTOS\timers.obj" "FreeRTOS\portable\CCS\ARM_CM4F\port.obj" "FreeRTOS\portable\CCS\ARM_CM4F\portasm.obj" "FreeRTOS\portable\MemMang\heap_4.obj" "LcdDriver\Crystalfontz128x128_ST7735.obj" "LcdDriver\HAL_MSP_EXP432P401R_Crystalfontz128x128_ST7735.obj" "Libraries\DefaultLib\HAL_I2C.obj" "Libraries\DefaultLib\HAL_OPT3001.obj" "Libraries\DefaultLib\uart.obj" "Libraries\card_dealer.obj" "Libraries\events.obj" "Libraries\interfaces.obj" "Libraries\screens.obj" 
+	-$(RM) "main_freertos.d" "startup_msp432p401r_FreeRTOS_ccs.d" "system_msp432p401r.d" "FreeRTOS\croutine.d" "FreeRTOS\event_groups.d" "FreeRTOS\list.d" "FreeRTOS\queue.d" "FreeRTOS\tasks.d" "FreeRTOS\timers.d" "FreeRTOS\portable\CCS\ARM_CM4F\port.d" "FreeRTOS\portable\MemMang\heap_4.d" "LcdDriver\Crystalfontz128x128_ST7735.d" "LcdDriver\HAL_MSP_EXP432P401R_Crystalfontz128x128_ST7735.d" "Libraries\DefaultLib\HAL_I2C.d" "Libraries\DefaultLib\HAL_OPT3001.d" "Libraries\DefaultLib\uart.d" "Libraries\card_dealer.d" "Libraries\events.d" "Libraries\interfaces.d" "Libraries\screens.d" 
 	-$(RM) "FreeRTOS\portable\CCS\ARM_CM4F\portasm.d" 
 	-@echo 'Finished clean'
 	-@echo ' '

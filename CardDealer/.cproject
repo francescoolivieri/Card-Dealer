@@ -42,15 +42,15 @@
 									<listOptionValue builtIn="false" value="ccs"/>
 								</option>
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.ti.ccstudio.buildDefinitions.MSP432_20.2.compilerID.INCLUDE_PATH.1448989771" name="Add dir to #include search path (--include_path, -I)" superClass="com.ti.ccstudio.buildDefinitions.MSP432_20.2.compilerID.INCLUDE_PATH" valueType="includePath">
-									<listOptionValue builtIn="false" value="C:\Users\Francesco Olivieri\Desktop\UNI\SW EMBEDDED SYSTEMS\CardDealer\FreeRTOS\include"/>
-									<listOptionValue builtIn="false" value="C:\Users\Francesco Olivieri\Desktop\UNI\SW EMBEDDED SYSTEMS\CardDealer\LcdDriver"/>
+									<listOptionValue builtIn="false" value="C:\Users\Francesco Olivieri\Documents\GitHub\Card-Dealer\CardDealer\FreeRTOS\include"/>
+									<listOptionValue builtIn="false" value="C:\Users\Francesco Olivieri\Documents\GitHub\Card-Dealer\CardDealer\LcdDriver"/>
 									<listOptionValue builtIn="false" value="C:\Users\Francesco Olivieri\Documents\GitHub\Card-Dealer\CardDealer\Libraries"/>
 									<listOptionValue builtIn="false" value="C:\Users\Francesco Olivieri\Documents\GitHub\Card-Dealer\CardDealer\Libraries\DefaultLib"/>
 									<listOptionValue builtIn="false" value="${CCS_BASE_ROOT}/arm/include"/>
 									<listOptionValue builtIn="false" value="${CCS_BASE_ROOT}/arm/include/CMSIS"/>
 									<listOptionValue builtIn="false" value="${PROJECT_ROOT}"/>
 									<listOptionValue builtIn="false" value="${CG_TOOL_ROOT}/include"/>
-									<listOptionValue builtIn="false" value="C:\Users\Francesco Olivieri\Desktop\UNI\SW EMBEDDED SYSTEMS\CardDealer\FreeRTOS\portable\CCS\ARM_CM4F"/>
+									<listOptionValue builtIn="false" value="C:\Users\Francesco Olivieri\Documents\GitHub\Card-Dealer\CardDealer\FreeRTOS\portable\CCS\ARM_CM4F"/>
 									<listOptionValue builtIn="false" value="C:\Users\Francesco Olivieri\Documents\simplelink_msp432p4_sdk_3_40_01_02\simplelink_msp432p4_sdk_3_40_01_02\source"/>
 								</option>
 								<option id="com.ti.ccstudio.buildDefinitions.MSP432_20.2.compilerID.DEBUGGING_MODEL.1012451139" name="Debugging model" superClass="com.ti.ccstudio.buildDefinitions.MSP432_20.2.compilerID.DEBUGGING_MODEL" useByScannerDiscovery="false" value="com.ti.ccstudio.buildDefinitions.MSP432_20.2.compilerID.DEBUGGING_MODEL.SYMDEBUG__DWARF" valueType="enumerated"/>

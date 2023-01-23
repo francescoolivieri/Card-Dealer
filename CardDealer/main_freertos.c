@@ -125,18 +125,7 @@ void fn_SCAN(){
 }
 
 void fn_GAME_SELECTION(){
-    /*
-    if(state_transition){
-        // implement num card sel in interfaces lib
-        state_transition = false;
-    }
-
-
-    if(getEvent() == BUTTON1_PRESSED){
-        current_state = CARD_DISTRIBUTION;
-        state_transition = true;
-    }*/
-    Interrupt_enableInterrupt(INT_ADC14);
+    Interrupt_enableInterrupt(INT_ADC14);  // start detecting joystick movements
     gameSelection();
 
 
@@ -147,7 +136,7 @@ void fn_GAME_SELECTION(){
     state_transition = true;
 }
 
-// EXPAND WORK
+
 void fn_DISTRIBUTION(){
     clearEvent();
     distributeCards();

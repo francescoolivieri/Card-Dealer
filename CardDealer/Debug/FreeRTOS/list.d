@@ -5,7 +5,7 @@ FreeRTOS/list.obj: C:/ti/ccs1210/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/includ
 FreeRTOS/list.obj: C:/ti/ccs1210/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/_ti_config.h
 FreeRTOS/list.obj: C:/ti/ccs1210/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/linkage.h
 FreeRTOS/list.obj: C:/ti/ccs1210/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/sys/cdefs.h
-FreeRTOS/list.obj: C:/Users/Francesco\ Olivieri/Desktop/UNI/SW\ EMBEDDED\ SYSTEMS/CardDealer/FreeRTOS/include/FreeRTOS.h
+FreeRTOS/list.obj: C:/Users/Francesco\ Olivieri/Documents/GitHub/Card-Dealer/CardDealer/FreeRTOS/include/FreeRTOS.h
 FreeRTOS/list.obj: C:/ti/ccs1210/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/stddef.h
 FreeRTOS/list.obj: C:/ti/ccs1210/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/stdint.h
 FreeRTOS/list.obj: C:/ti/ccs1210/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/_stdint40.h
@@ -54,12 +54,12 @@ FreeRTOS/list.obj: C:/Users/Francesco\ Olivieri/Documents/simplelink_msp432p4_sd
 FreeRTOS/list.obj: C:/Users/Francesco\ Olivieri/Documents/simplelink_msp432p4_sdk_3_40_01_02/simplelink_msp432p4_sdk_3_40_01_02/source/ti/devices/msp432p4xx/driverlib/wdt_a.h
 FreeRTOS/list.obj: C:/Users/Francesco\ Olivieri/Documents/simplelink_msp432p4_sdk_3_40_01_02/simplelink_msp432p4_sdk_3_40_01_02/source/ti/devices/msp432p4xx/driverlib/sysctl.h
 FreeRTOS/list.obj: C:/Users/Francesco\ Olivieri/Documents/simplelink_msp432p4_sdk_3_40_01_02/simplelink_msp432p4_sdk_3_40_01_02/source/ti/devices/msp432p4xx/driverlib/flash.h
-FreeRTOS/list.obj: C:/Users/Francesco\ Olivieri/Desktop/UNI/SW\ EMBEDDED\ SYSTEMS/CardDealer/FreeRTOS/include/projdefs.h
-FreeRTOS/list.obj: C:/Users/Francesco\ Olivieri/Desktop/UNI/SW\ EMBEDDED\ SYSTEMS/CardDealer/FreeRTOS/include/portable.h
-FreeRTOS/list.obj: C:/Users/Francesco\ Olivieri/Desktop/UNI/SW\ EMBEDDED\ SYSTEMS/CardDealer/FreeRTOS/include/deprecated_definitions.h
-FreeRTOS/list.obj: C:/Users/Francesco\ Olivieri/Desktop/UNI/SW\ EMBEDDED\ SYSTEMS/CardDealer/FreeRTOS/portable/CCS/ARM_CM4F/portmacro.h
-FreeRTOS/list.obj: C:/Users/Francesco\ Olivieri/Desktop/UNI/SW\ EMBEDDED\ SYSTEMS/CardDealer/FreeRTOS/include/mpu_wrappers.h
-FreeRTOS/list.obj: C:/Users/Francesco\ Olivieri/Desktop/UNI/SW\ EMBEDDED\ SYSTEMS/CardDealer/FreeRTOS/include/list.h
+FreeRTOS/list.obj: C:/Users/Francesco\ Olivieri/Documents/GitHub/Card-Dealer/CardDealer/FreeRTOS/include/projdefs.h
+FreeRTOS/list.obj: C:/Users/Francesco\ Olivieri/Documents/GitHub/Card-Dealer/CardDealer/FreeRTOS/include/portable.h
+FreeRTOS/list.obj: C:/Users/Francesco\ Olivieri/Documents/GitHub/Card-Dealer/CardDealer/FreeRTOS/include/deprecated_definitions.h
+FreeRTOS/list.obj: C:/Users/Francesco\ Olivieri/Documents/GitHub/Card-Dealer/CardDealer/FreeRTOS/portable/CCS/ARM_CM4F/portmacro.h
+FreeRTOS/list.obj: C:/Users/Francesco\ Olivieri/Documents/GitHub/Card-Dealer/CardDealer/FreeRTOS/include/mpu_wrappers.h
+FreeRTOS/list.obj: C:/Users/Francesco\ Olivieri/Documents/GitHub/Card-Dealer/CardDealer/FreeRTOS/include/list.h
 
 ../FreeRTOS/list.c:
 
@@ -71,7 +71,7 @@ C:/ti/ccs1210/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/linkage.h:
 
 C:/ti/ccs1210/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/sys/cdefs.h:
 
-C:/Users/Francesco\ Olivieri/Desktop/UNI/SW\ EMBEDDED\ SYSTEMS/CardDealer/FreeRTOS/include/FreeRTOS.h:
+C:/Users/Francesco\ Olivieri/Documents/GitHub/Card-Dealer/CardDealer/FreeRTOS/include/FreeRTOS.h:
 
 C:/ti/ccs1210/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/stddef.h:
 
@@ -169,15 +169,15 @@ C:/Users/Francesco\ Olivieri/Documents/simplelink_msp432p4_sdk_3_40_01_02/simple
 
 C:/Users/Francesco\ Olivieri/Documents/simplelink_msp432p4_sdk_3_40_01_02/simplelink_msp432p4_sdk_3_40_01_02/source/ti/devices/msp432p4xx/driverlib/flash.h:
 
-C:/Users/Francesco\ Olivieri/Desktop/UNI/SW\ EMBEDDED\ SYSTEMS/CardDealer/FreeRTOS/include/projdefs.h:
+C:/Users/Francesco\ Olivieri/Documents/GitHub/Card-Dealer/CardDealer/FreeRTOS/include/projdefs.h:
 
-C:/Users/Francesco\ Olivieri/Desktop/UNI/SW\ EMBEDDED\ SYSTEMS/CardDealer/FreeRTOS/include/portable.h:
+C:/Users/Francesco\ Olivieri/Documents/GitHub/Card-Dealer/CardDealer/FreeRTOS/include/portable.h:
 
-C:/Users/Francesco\ Olivieri/Desktop/UNI/SW\ EMBEDDED\ SYSTEMS/CardDealer/FreeRTOS/include/deprecated_definitions.h:
+C:/Users/Francesco\ Olivieri/Documents/GitHub/Card-Dealer/CardDealer/FreeRTOS/include/deprecated_definitions.h:
 
-C:/Users/Francesco\ Olivieri/Desktop/UNI/SW\ EMBEDDED\ SYSTEMS/CardDealer/FreeRTOS/portable/CCS/ARM_CM4F/portmacro.h:
+C:/Users/Francesco\ Olivieri/Documents/GitHub/Card-Dealer/CardDealer/FreeRTOS/portable/CCS/ARM_CM4F/portmacro.h:
 
-C:/Users/Francesco\ Olivieri/Desktop/UNI/SW\ EMBEDDED\ SYSTEMS/CardDealer/FreeRTOS/include/mpu_wrappers.h:
+C:/Users/Francesco\ Olivieri/Documents/GitHub/Card-Dealer/CardDealer/FreeRTOS/include/mpu_wrappers.h:
 
-C:/Users/Francesco\ Olivieri/Desktop/UNI/SW\ EMBEDDED\ SYSTEMS/CardDealer/FreeRTOS/include/list.h:
+C:/Users/Francesco\ Olivieri/Documents/GitHub/Card-Dealer/CardDealer/FreeRTOS/include/list.h:
 

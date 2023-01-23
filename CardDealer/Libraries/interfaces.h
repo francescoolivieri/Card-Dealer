@@ -61,7 +61,7 @@ int degreesToSteps(int degrees);
 // Emergency return
 static int homePosition = 0;
 void resetPosition();
-int getHomePosition();
+int getHomeDistance();
 void updateHomePosition(int steps);
 void clearHomePosition();
 
