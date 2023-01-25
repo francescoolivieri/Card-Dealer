@@ -73,4 +73,17 @@ void screen_continue(Graphics_Context context){
     Graphics_drawStringCentered(&context,(int8_t *)"to Start", AUTO_STRING_LENGTH, 64, 70, OPAQUE_TEXT);
 }
 
+void screen_cards_refill(Graphics_Context context){
+    Graphics_clearDisplay(&context);
+
+    Graphics_drawStringCentered(&context, (int8_t*) "OUT OF CARDS!",
+                                AUTO_STRING_LENGTH, 64, 40, OPAQUE_TEXT);
+    Graphics_drawStringCentered(&context, (int8_t*) "Press", AUTO_STRING_LENGTH,
+                                64, 50, OPAQUE_TEXT);
+    Graphics_drawStringCentered(&context, (int8_t*) "Button1   =>",
+                                AUTO_STRING_LENGTH, 64, 60, OPAQUE_TEXT);
+    Graphics_drawStringCentered(&context, (int8_t*) "to continue after refill",
+                                AUTO_STRING_LENGTH, 64, 70, OPAQUE_TEXT);
+}
+
 

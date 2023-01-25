@@ -1,8 +1,8 @@
 # FIXED
 
 main_freertos.obj: ../main_freertos.c
-main_freertos.obj: C:/Users/Francesco\ Olivieri/Documents/GitHub/Card-Dealer/CardDealer/Libraries/interfaces.h
-main_freertos.obj: C:/Users/Francesco\ Olivieri/Documents/GitHub/Card-Dealer/CardDealer/Libraries/card_dealer.h
+main_freertos.obj: C:/Users/Francesco\ Olivieri/Documents/GitHub/Card-Dealer/CardDealer/Libraries/actions.h
+main_freertos.obj: C:/Users/Francesco\ Olivieri/Documents/GitHub/Card-Dealer/CardDealer/Libraries/screens.h
 main_freertos.obj: C:/ti/ccs1210/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/stdio.h
 main_freertos.obj: C:/ti/ccs1210/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/_ti_config.h
 main_freertos.obj: C:/ti/ccs1210/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/linkage.h
@@ -59,11 +59,9 @@ main_freertos.obj: C:/Users/Francesco\ Olivieri/Documents/simplelink_msp432p4_sd
 main_freertos.obj: C:/Users/Francesco\ Olivieri/Documents/simplelink_msp432p4_sdk_3_40_01_02/simplelink_msp432p4_sdk_3_40_01_02/source/ti/devices/msp432p4xx/driverlib/flash.h
 main_freertos.obj: C:/Users/Francesco\ Olivieri/Documents/simplelink_msp432p4_sdk_3_40_01_02/simplelink_msp432p4_sdk_3_40_01_02/source/ti/grlib/grlib.h
 main_freertos.obj: C:/Users/Francesco\ Olivieri/Documents/GitHub/Card-Dealer/CardDealer/LcdDriver/HAL_MSP_EXP432P401R_Crystalfontz128x128_ST7735.h
-main_freertos.obj: C:/Users/Francesco\ Olivieri/Documents/GitHub/Card-Dealer/CardDealer/Libraries/events.h
-main_freertos.obj: C:/Users/Francesco\ Olivieri/Documents/GitHub/Card-Dealer/CardDealer/Libraries/screens.h
-main_freertos.obj: C:/Users/Francesco\ Olivieri/Documents/simplelink_msp432p4_sdk_3_40_01_02/simplelink_msp432p4_sdk_3_40_01_02/source/ti/grlib/grlib.h
 main_freertos.obj: C:/ti/ccs1210/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/string.h
 main_freertos.obj: C:/ti/ccs1210/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/xlocale/_string.h
+main_freertos.obj: C:/Users/Francesco\ Olivieri/Documents/GitHub/Card-Dealer/CardDealer/Libraries/events.h
 main_freertos.obj: C:/Users/Francesco\ Olivieri/Documents/GitHub/Card-Dealer/CardDealer/FreeRTOS/include/FreeRTOS.h
 main_freertos.obj: C:/ti/ccs1210/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/stddef.h
 main_freertos.obj: C:/Users/Francesco\ Olivieri/Documents/GitHub/Card-Dealer/CardDealer/Libraries/DefaultLib/FreeRTOSConfig.h
@@ -72,6 +70,10 @@ main_freertos.obj: C:/Users/Francesco\ Olivieri/Documents/GitHub/Card-Dealer/Car
 main_freertos.obj: C:/Users/Francesco\ Olivieri/Documents/GitHub/Card-Dealer/CardDealer/FreeRTOS/include/deprecated_definitions.h
 main_freertos.obj: C:/Users/Francesco\ Olivieri/Documents/GitHub/Card-Dealer/CardDealer/FreeRTOS/portable/CCS/ARM_CM4F/portmacro.h
 main_freertos.obj: C:/Users/Francesco\ Olivieri/Documents/GitHub/Card-Dealer/CardDealer/FreeRTOS/include/mpu_wrappers.h
+main_freertos.obj: C:/Users/Francesco\ Olivieri/Documents/GitHub/Card-Dealer/CardDealer/Libraries/peripherials.h
+main_freertos.obj: C:/Users/Francesco\ Olivieri/Documents/simplelink_msp432p4_sdk_3_40_01_02/simplelink_msp432p4_sdk_3_40_01_02/source/ti/grlib/grlib.h
+main_freertos.obj: C:/Users/Francesco\ Olivieri/Documents/GitHub/Card-Dealer/CardDealer/Libraries/inizializations.h
+main_freertos.obj: C:/Users/Francesco\ Olivieri/Documents/simplelink_msp432p4_sdk_3_40_01_02/simplelink_msp432p4_sdk_3_40_01_02/source/ti/grlib/grlib.h
 main_freertos.obj: C:/Users/Francesco\ Olivieri/Documents/GitHub/Card-Dealer/CardDealer/Libraries/DefaultLib/uart.h
 main_freertos.obj: C:/Users/Francesco\ Olivieri/Documents/GitHub/Card-Dealer/CardDealer/FreeRTOS/include/queue.h
 main_freertos.obj: C:/Users/Francesco\ Olivieri/Documents/GitHub/Card-Dealer/CardDealer/FreeRTOS/include/task.h
@@ -79,9 +81,9 @@ main_freertos.obj: C:/Users/Francesco\ Olivieri/Documents/GitHub/Card-Dealer/Car
 
 ../main_freertos.c:
 
-C:/Users/Francesco\ Olivieri/Documents/GitHub/Card-Dealer/CardDealer/Libraries/interfaces.h:
+C:/Users/Francesco\ Olivieri/Documents/GitHub/Card-Dealer/CardDealer/Libraries/actions.h:
 
-C:/Users/Francesco\ Olivieri/Documents/GitHub/Card-Dealer/CardDealer/Libraries/card_dealer.h:
+C:/Users/Francesco\ Olivieri/Documents/GitHub/Card-Dealer/CardDealer/Libraries/screens.h:
 
 C:/ti/ccs1210/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/stdio.h:
 
@@ -195,15 +197,11 @@ C:/Users/Francesco\ Olivieri/Documents/simplelink_msp432p4_sdk_3_40_01_02/simple
 
 C:/Users/Francesco\ Olivieri/Documents/GitHub/Card-Dealer/CardDealer/LcdDriver/HAL_MSP_EXP432P401R_Crystalfontz128x128_ST7735.h:
 
-C:/Users/Francesco\ Olivieri/Documents/GitHub/Card-Dealer/CardDealer/Libraries/events.h:
-
-C:/Users/Francesco\ Olivieri/Documents/GitHub/Card-Dealer/CardDealer/Libraries/screens.h:
-
-C:/Users/Francesco\ Olivieri/Documents/simplelink_msp432p4_sdk_3_40_01_02/simplelink_msp432p4_sdk_3_40_01_02/source/ti/grlib/grlib.h:
-
 C:/ti/ccs1210/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/string.h:
 
 C:/ti/ccs1210/ccs/tools/compiler/ti-cgt-arm_20.2.7.LTS/include/xlocale/_string.h:
+
+C:/Users/Francesco\ Olivieri/Documents/GitHub/Card-Dealer/CardDealer/Libraries/events.h:
 
 C:/Users/Francesco\ Olivieri/Documents/GitHub/Card-Dealer/CardDealer/FreeRTOS/include/FreeRTOS.h:
 
@@ -220,6 +218,14 @@ C:/Users/Francesco\ Olivieri/Documents/GitHub/Card-Dealer/CardDealer/FreeRTOS/in
 C:/Users/Francesco\ Olivieri/Documents/GitHub/Card-Dealer/CardDealer/FreeRTOS/portable/CCS/ARM_CM4F/portmacro.h:
 
 C:/Users/Francesco\ Olivieri/Documents/GitHub/Card-Dealer/CardDealer/FreeRTOS/include/mpu_wrappers.h:
+
+C:/Users/Francesco\ Olivieri/Documents/GitHub/Card-Dealer/CardDealer/Libraries/peripherials.h:
+
+C:/Users/Francesco\ Olivieri/Documents/simplelink_msp432p4_sdk_3_40_01_02/simplelink_msp432p4_sdk_3_40_01_02/source/ti/grlib/grlib.h:
+
+C:/Users/Francesco\ Olivieri/Documents/GitHub/Card-Dealer/CardDealer/Libraries/inizializations.h:
+
+C:/Users/Francesco\ Olivieri/Documents/simplelink_msp432p4_sdk_3_40_01_02/simplelink_msp432p4_sdk_3_40_01_02/source/ti/grlib/grlib.h:
 
 C:/Users/Francesco\ Olivieri/Documents/GitHub/Card-Dealer/CardDealer/Libraries/DefaultLib/uart.h:
 
