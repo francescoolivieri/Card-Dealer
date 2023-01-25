@@ -31,19 +31,72 @@ At the end of the first card distribution the dealer will position itself in fro
 4. ### End game
 The game ends depending on which card game you're playing. In general the game will be ended where there's no cards left on the dealer, or you can decide to stop by pushing button B2 and the structure will return to its inital state
 
- 
-## How it works
 
-## Software Design
+## Project layout
+
+├── README.md
+├── CardDealer
+	├── Binaries                # Folder with executable file
+    ├── Includes               
+    ├── FreeRTOS                # FreeRTOS functions
+    ├── LcdDriver               #Libraries for LCD screen
+	├── Libraries 
+	│ 	├── DefaultLib
+	│ 	└── source files        # project funtions
+	│ 
+    └── main_freertos.c         # main with FSM states
+
+### Libraries folder
+Here we find DefaultLib and all the source files with the functions used in our project:
+	- screen.h
+	functions to print on the LCD screen the funtions phases
+
+	- initialization.h
+	functions to inizialize the hardware end interrupt handlers
+
+	- events.h
+	funtions to specify the event happening
+
+	- <mettere nome>.h 
+	low level funtions to do basic operations with peripherials (sensors and motors)
+
+	- <mettere nome>.h
+	high level functions to implement the more complex game phases
 
 ## State Machine
 ![Immagine 2023-01-18 103110](https://user-images.githubusercontent.com/113623927/213134840-ae089878-d0a2-4a26-8f02-a190b4f40642.png)
 
-## Concise description of states
+### Concise description of states
+- IDLE: Here all periferials are initialized
+- WAITING: Here is displayed the functionalities of the buttons and can select B1 to continue with game. From here on you can exit every state by pressing B2 button
+- SCANNING: Here the distnce sensor scans end counts player. The stepper motor turns and when encountered a player its position is saved
+- GAME SELECTION: state to select the number of card to distribute
+- GAME: in game state. If asked cards are deliviered else the stepper motor moves to the next person positions
+- STOP EMERGENCY: In every moment the button B2 can be pressed end the machine goes in this state. it then transitions to IDLE.
+
 
 ## Build and burn the project
-In order to properly build this project you want to import the respective libraries.
+In order to properly build this project you want to :
+(1) Open the project with CCS
+	
+(2) Right click on "CardDealer [Active - Debug]" folder and left click on "properties"
 
+(3) The "Properties for CardDealer" window will open. Now go to Build->Arm Compiler->Include Options. In the section "Add dir to #include ..." you must change all paths to include the same files with respect to the position where you placed the project. You also need to include the path for "simplelink_msp432p4_sdk_3_40_01_02\simplelink_msp432p4_sdk_3_40_01_02\source" (folder given by professor)
+
+(4) Once the paths are changed go to Build->Arm Linker->File Search Path. Here you need to change paths in the section "Include library file or ..." to include the listed files.
+
+(5) When all done in the bottom right corner click "Apply and close" to apply all changes.
+
+(5) Now you can build the project by clicking the hammer icon on the top bar.
+
+(6) To burn the project on the board connect the MSP432 to your computer with its USB cable and from the top section select Run->Load and select this project.
+
+
+## Team members work
+
+- Francesco: distance sensor, FSM, button interactions, timers, interrupts
+- Federico: DC Motor, Lcd display layouts and different screens functions, FSM, handlers, wiring, dispender building.
+- Eddie: Joystick interaction, display, FSM, events, wiring and structure building
 
 
 
