@@ -18,17 +18,17 @@
 ## How to play
 
 The usage of this device is divided into different stages:
-1. Start and players detection
+1. ### Start and players detection
 At first you will be welcome by a starting screen that explains the main buttons, you can start playing by pushing the lower button B1.
 The Card-Dealer will now make a complete turn on itself to detect the number of players and the respective position, to do so each person should come near to the dealer with his hand ( distance sensor used has some problems with certain types of tissues ).
 
-2. Card selection and distribution
+2. ### Card selection and distribution
 Once the 360 degress turn is completed youu will be prompted to card selections screen. Here there will be displayed the number of people that where detected. Furthermore it will be asked to choose how many cards distribute to each person at the beginning of the game, this is done by moving the joystick up or down. Once you have set this you can press the button B1 and the dealer will start giving to each person the selected number of cards.
 
-3. Game time
+3. ### Game time
 At the end of the first card distribution the dealer will position itself in front of the first player, he can decide whether to ask for a card (Hand in front of distance sensor for ~1 sec) or skip to next person (holding the hand in front of distance sensor until the dealer moves). This can be done by each player when it's his turn.
 
-4. End game
+4. ### End game
 The game ends depending on which card game you're playing. In general the game will be ended where there's no cards left on the dealer, or you can decide to stop by pushing button B2 and the structure will return to its inital state
 
  
