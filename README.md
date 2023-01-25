@@ -64,10 +64,10 @@ Here we find DefaultLib and all the source files with the functions used in our 
 	- events.h
 	funtions to specify the event happening
 
-	- <mettere nome>.h 
+	- peripherals.h 
 	low level funtions to do basic operations with peripherials (sensors and motors)
 
-	- <mettere nome>.h
+	- actions.h
 	high level functions to implement the more complex game phases
 
 ## State Machine
