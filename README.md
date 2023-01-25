@@ -44,6 +44,24 @@ The game ends depending on which card game you're playing. In general the game w
 	│   
     └── main_freertos.c         # main with FSM states  
 
+
+├── ARTIFACT_EVALUATION.md
+├── apps                     # Sample applications
+├── compiler
+│   ├── cmake                # CMake support functions
+│   ├── src                  # Source code of immortalc
+│   └── test                 # Snapshot tests for immortalc
+├── Dockerfile
+└── runtime
+    ├── cmake                # CMake toolchains for cross-compiling
+    ├── src                  # ImmortalThreads runtime library
+    └── test                 # Test applications
+        └── benchmarks       # Benchmark test applications
+            ├── ar
+            ├── bc
+            ├── cuckoo
+            └── dnn
+
 ### Libraries folder
 Here we find DefaultLib and all the source files with the functions used in our project:
 	- screen.h
