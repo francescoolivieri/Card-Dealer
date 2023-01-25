@@ -12,6 +12,10 @@
  - Lego
  - Cardboard
  - Powerbank
+
+## Links
+	-video:
+	-powerpoint:
  
 ## How to play
 
