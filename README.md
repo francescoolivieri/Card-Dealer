@@ -1,5 +1,3 @@
-###  WORK IN PROGRESS 
-
 # Card Dealer
  Card Dealer using MSP432P401R - Embedded Software for the Internet of Things  
  Implementation of an automatic dealer of cards with people recognition.
@@ -37,7 +35,7 @@ The game ends depending on which card game you're playing. In general the game w
 ├── README.md
 ├── CardDealer
 	├── Binaries                # Folder with executable file
-    ├── Includes               
+    ├── Includes       
     ├── FreeRTOS                # FreeRTOS functions
     ├── LcdDriver               #Libraries for LCD screen
 	├── Libraries 
@@ -77,6 +75,7 @@ Here we find DefaultLib and all the source files with the functions used in our 
 
 ## Build and burn the project
 In order to properly build this project you want to :
+
 (1) Open the project with CCS
 	
 (2) Right click on "CardDealer [Active - Debug]" folder and left click on "properties"
@@ -94,9 +93,9 @@ In order to properly build this project you want to :
 
 ## Team members work
 
-- Francesco: distance sensor, FSM, button interactions, timers, interrupts
-- Federico: DC Motor, Lcd display layouts and different screens functions, FSM, handlers, wiring, dispender building.
-- Eddie: Joystick interaction, display, FSM, events, wiring and structure building
+- Francesco: distance sensor, FSM, button interactions, timers, interrupts, base frame.
+- Federico: DC Motor, Lcd display layouts and screens functions, FSM, handlers, wiring.
+- Eddie: Joystick interaction, FSM, events, wiring and structure building, stepper motor.
 
 
 
