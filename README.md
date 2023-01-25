@@ -32,38 +32,25 @@ The game ends depending on which card game you're playing. In general the game w
 
 ## Project layout
 
+```
 ├── README.md  
 ├── CardDealer   
-	├── Binaries                # Folder with executable file  
-    ├── Includes         
-    ├── FreeRTOS                # FreeRTOS functions  
-    ├── LcdDriver               #Libraries for LCD screen  
-	├── Libraries  
-	│ 	├── DefaultLib  
-	│ 	└── source files        # project funtions  
-	│   
-    └── main_freertos.c         # main with FSM states  
+│  ├── Binaries		# Folder with executable file    
+│  ├── Includes           
+│  ├── FreeRTOS		# FreeRTOS functions    
+│  ├── LcdDriver	#Libraries for LCD screen    
+│  ├── Libraries    
+│  	├── DefaultLib     
+│  	└── source files	# project funtions    
+│  	     
+└── main_freertos.c	# main with FSM states 
+    
+```
 
-
-├── ARTIFACT_EVALUATION.md
-├── apps                     # Sample applications
-├── compiler
-│   ├── cmake                # CMake support functions
-│   ├── src                  # Source code of immortalc
-│   └── test                 # Snapshot tests for immortalc
-├── Dockerfile
-└── runtime
-    ├── cmake                # CMake toolchains for cross-compiling
-    ├── src                  # ImmortalThreads runtime library
-    └── test                 # Test applications
-        └── benchmarks       # Benchmark test applications
-            ├── ar
-            ├── bc
-            ├── cuckoo
-            └── dnn
 
 ### Libraries folder
 Here we find DefaultLib and all the source files with the functions used in our project:
+
 	- screen.h
 	functions to print on the LCD screen the funtions phases
 
@@ -83,6 +70,7 @@ Here we find DefaultLib and all the source files with the functions used in our 
 ![Immagine 2023-01-18 103110](https://user-images.githubusercontent.com/113623927/213134840-ae089878-d0a2-4a26-8f02-a190b4f40642.png)
 
 ### Concise description of states
+
 - IDLE: Here all periferials are initialized
 - WAITING: Here is displayed the functionalities of the buttons and can select B1 to continue with game. From here on you can exit every state by pressing B2 button
 - SCANNING: Here the distnce sensor scans end counts player. The stepper motor turns and when encountered a player its position is saved
