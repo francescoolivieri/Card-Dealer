@@ -1,5 +1,4 @@
-#include <actions.h>
-
+#include "actions.h"
 
 void init(){
 
@@ -10,6 +9,8 @@ void init(){
 
     _hwInit();
 }
+
+/* ---------- Main Functionalities ---------- */
 
 void peopleDetection(){
     BaseType_t result = pdPASS;
@@ -121,63 +122,8 @@ void startGame(){
 
 }
 
+/* ---------- Step Motor & Distance Sensor Utilities ---------- */
 
-void cardsRefill(){
-    screen_cards_refill(g_sContext);
-
-    clearEvent();
-    while (getEvent() != BUTTON1_PRESSED && getEvent() != BUTTON2_PRESSED) ;
-}
-
-void giveOneCard(){
-
-    if(getCardsLeft()>0){
-        float scaleFactor = 1000000;
-        float spinForwardTime = 0.075;
-        float spinBackwardsTime = 0.05;
-
-        /*wheel spins forward to give the card*/
-        Timer32_setCount(TIMER32_1_BASE, 24 * scaleFactor * spinForwardTime); // multiply by 24 -> 1 us *
-        DCM_moveForward();
-        while (Timer32_getValue(TIMER32_1_BASE) > 0); // Wait 0.015sec
-
-        /*wheel spins backwards to align moved cards*/
-        DCM_moveBackward();
-        Timer32_setCount(TIMER32_1_BASE, 24 * scaleFactor*spinBackwardsTime);
-        while (Timer32_getValue(TIMER32_1_BASE) > 0); // Wait 0.008sec
-
-        /*motor is turned off*/
-        DCM_turnOff();
-
-        cardRemoved();
-        vTaskDelay(pdMS_TO_TICKS(5000));
-    }else{
-        button2_press();
-    }
-
-}
-
-void resetPosition(){
-
-    stepParameter pv;
-     pv.steps = getHomeDistance();
-     pv.forward = false;
-     pv.mode = STOP_MODE;
-
-
-     vTaskStepMotor( (void*) &pv );
-
-    clearHomePosition();
-}
-
-
-/* ----- FreeRTOS Tasks ----- */
-
-/**
- * TaskDistanceSensor
- * Reads distance
- * @param mode
- */
 void vTaskDistanceSensor(void *pvParameters)
 {
     uart_println("Start TaskDistanceSensor.");
@@ -195,7 +141,6 @@ void vTaskDistanceSensor(void *pvParameters)
 
         if (DS_hasNewMeasure() == true)
         {
-            fflush(stdout);
             int distCM = DS_getMeasure();
             printf("Distance: %i cm \n", distCM);
             fflush(stdout);
@@ -247,12 +192,6 @@ void vTaskDistanceSensor(void *pvParameters)
 
 
 
-/**
- * TaskStepperMotor
- * Make the motor turn
- * @param Degrees of rotation
- */
-//m1_1_1s//
 void vTaskStepMotor(void *pvParameters)
 {
     stepParameter pv = (*((stepParameter *)pvParameters));
@@ -279,7 +218,7 @@ void vTaskStepMotor(void *pvParameters)
 
                 vTaskSuspend(xTaskXHandle);
                 turnOnBuzzer();
-                vTaskDelay(pdMS_TO_TICKS(30000));
+                vTaskDelay(pdMS_TO_TICKS(25000));  // buzz for that time
                 turnOffBuzzer();
                 vTaskResume(xTaskXHandle);
             }
@@ -287,30 +226,17 @@ void vTaskStepMotor(void *pvParameters)
     }
 
     if(getEvent()!=BUTTON2_PRESSED)
-            end_arrive();
+            end_arrive();   // notifies that it is arrived at destination
 
 
     if(pv.mode == RECOGNITION_MODE){
-        vTaskDelete(xTaskXHandle);
+        vTaskDelete(xTaskXHandle);  // delete distance sensor task
 
-        vTaskDelete(NULL);
+        vTaskDelete(NULL);  // delete current task
     }
 }
 
-/* ----- Service Routines ----- */
-
-int getCardsLeft(){
-    return cards_left;
-}
-
-void cardRemoved(){
-    if(cards_left > 0)
-        cards_left--;
-}
-
-int degreesToSteps(int degrees){
-    return (STEPS_360/(360 / degrees));
-}
+/* ---------- Homing Procedure Utilities ---------- */
 
 int getHomeDistance(){
     return homePosition;
@@ -324,6 +250,71 @@ void updateHomePosition(int steps){
 
 void clearHomePosition(){
     homePosition = 0;
+}
+
+
+void resetPosition(){
+
+    stepParameter pv;
+     pv.steps = getHomeDistance();
+     pv.forward = false;
+     pv.mode = STOP_MODE;
+
+
+     vTaskStepMotor( (void*) &pv );
+
+    clearHomePosition();
+}
+
+/* ---------- Cards Utilities ---------- */
+int getCardsLeft(){
+    return cards_left;
+}
+
+void cardRemoved(){
+    if(cards_left > 0)
+        cards_left--;
+}
+
+void cardsRefill(){
+    screen_cards_refill(g_sContext);
+
+    clearEvent();
+    while (getEvent() != BUTTON1_PRESSED && getEvent() != BUTTON2_PRESSED) ;
+}
+
+void giveOneCard(){
+
+    if(getCardsLeft()>0){
+        float scaleFactor = 1000000;
+        float spinForwardTime = 0.075;
+        float spinBackwardsTime = 0.05;
+
+        /*wheel spins forward to give the card*/
+        Timer32_setCount(TIMER32_1_BASE, 24 * scaleFactor * spinForwardTime); // multiply by 24 -> 1 us *
+        DCM_moveForward();
+        while (Timer32_getValue(TIMER32_1_BASE) > 0); // Wait 0.015sec
+
+        /*wheel spins backwards to align moved cards*/
+        DCM_moveBackward();
+        Timer32_setCount(TIMER32_1_BASE, 24 * scaleFactor*spinBackwardsTime);
+        while (Timer32_getValue(TIMER32_1_BASE) > 0); // Wait 0.008sec
+
+        /*motor is turned off*/
+        DCM_turnOff();
+
+        cardRemoved();
+        vTaskDelay(pdMS_TO_TICKS(5000));
+    }else{
+        button2_press();
+    }
+
+}
+
+/* ---------- Service Functions ---------- */
+
+int degreesToSteps(int degrees){
+    return (STEPS_360/(360 / degrees));
 }
 
 int getPeopleNumber(){
@@ -346,5 +337,4 @@ void setNewPersonPosition(int steps){
         peoplePosition[contPeople] = steps;
         incPeopleNumber();
     }
-
 }

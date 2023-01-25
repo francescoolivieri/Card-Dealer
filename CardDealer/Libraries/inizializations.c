@@ -46,13 +46,8 @@ void _graphicsInit()
     Graphics_initContext(&g_sContext, &g_sCrystalfontz128x128, &g_sCrystalfontz128x128_funcs);
     Graphics_setForegroundColor(&g_sContext, GRAPHICS_COLOR_WHITE);
     Graphics_setBackgroundColor(&g_sContext, GRAPHICS_COLOR_BLACK);
-    //GrContextFontSet(&g_sContext, &g_sFontFixed6x8);
-    //GrContextFontSet(&g_sContext, &g_sFontCmtt12);
-    GrContextFontSet(&g_sContext, &g_sFontCmsc12); //carino
-    //GrContextFontSet(&g_sContext, &g_sFontCmtt12);
 
-
-
+    GrContextFontSet(&g_sContext, &g_sFontCmsc12);
 
 
     Graphics_clearDisplay(&g_sContext);
@@ -176,15 +171,16 @@ void TA0_N_IRQHandler(void)  // Timer Interrupt for distance sensor
 
     if(P2IN&0x10) rising=1; else rising=0;
 
-    if(rising) // Start
+    if(rising) // Trigger sent
     {
         meas1 = Timer_A_getCaptureCompareCount(TIMER_A0_BASE, TIMER_A_CAPTURECOMPARE_REGISTER_1);
 
         meas1Count=1;
     }
-    else
+    else      // Echo received
     {
         meas2 = Timer_A_getCaptureCompareCount(TIMER_A0_BASE, TIMER_A_CAPTURECOMPARE_REGISTER_1);
+
         if (meas1Count==1){ //if meas1 has been collected
             meas1Count=0; //reset meas1 count
             DS_measureReady(meas1, meas2);
@@ -194,7 +190,7 @@ void TA0_N_IRQHandler(void)  // Timer Interrupt for distance sensor
 
 
 static uint16_t resultsBuffer[2];
-static bool joystick_semaphore=true;
+static bool joystick_semaphore=true; // manage
 void ADC14_IRQHandler(void)    // Handler for joystick
 {
     uint64_t status;
@@ -202,7 +198,7 @@ void ADC14_IRQHandler(void)    // Handler for joystick
     status = ADC14_getEnabledInterruptStatus();
     ADC14_clearInterruptFlag(status);
 
-    if(status & ADC_INT1) // BOH
+    if(status & ADC_INT1)
     {
         resultsBuffer[1] = ADC14_getResult(ADC_MEM1);
 
@@ -219,12 +215,13 @@ void ADC14_IRQHandler(void)    // Handler for joystick
         if(resultsBuffer[1]<2000 && joystick_semaphore==true){
             joystick_down();
             joystick_semaphore=false;
-            }
+        }
 
     }
 
 }
 
+//handler button1
 void PORT3_IRQHandler(void)
 {
 
@@ -236,7 +233,7 @@ void PORT3_IRQHandler(void)
     }
 }
 
-//handler button1
+//handler button2
 void PORT5_IRQHandler(void)
 {
 

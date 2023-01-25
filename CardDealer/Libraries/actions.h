@@ -77,12 +77,6 @@ typedef struct stepParameter{
 #define SM_RECOGNITION_MODE 1
 
 /*
- * Converts the degrees passed by parameter to steps,
- *   useful for Step Motor
- */
-int degreesToSteps(int degrees);
-
-/*
  * Function that is responsible for Step Motor movements
  */
 void vTaskStepMotor(void *pvParameters);
@@ -140,5 +134,11 @@ void setNewPersonPosition(int steps);
 
 int getPeoplePosition(int i);  // Returns the position in steps of the i-th person detected
 int getPeopleNumber();
+
+/*
+ * Converts the degrees passed by parameter to steps,
+ *   useful for Step Motor
+ */
+int degreesToSteps(int degrees);
 
 #endif /* LIBRARIES_ACTIONS_H_ */

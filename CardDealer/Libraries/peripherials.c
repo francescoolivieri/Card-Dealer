@@ -1,5 +1,7 @@
 #include "peripherials.h"
 
+/* ---------- Step Motor ---------- */
+
 static int step_count = 0;
 void SM_makeStep(bool move_forward){
     if(move_forward){
@@ -45,12 +47,16 @@ void SM_makeStep(bool move_forward){
 
 }
 
+/* ---------- Distance Sensor ---------- */
+
 void DS_sendTrigger(){ // triggers Pin 5.6 for 1 us
     GPIO_setOutputHighOnPin(GPIO_PORT_P5, GPIO_PIN6); // 5.6 trigger pin of distance sensor
     Timer32_setCount(TIMER32_0_BASE, 24 * 10); // multiply by 24 -> 1 us * 10 -> 1 us
     while (Timer32_getValue(TIMER32_0_BASE) > 0) // Wait 10us
     GPIO_setOutputLowOnPin(GPIO_PORT_P5, GPIO_PIN6);
 }
+
+/* ---------- DC Motor ---------- */
 
 void DCM_moveForward(){
     GPIO_setOutputHighOnPin(GPIO_PORT_P6, GPIO_PIN1);
