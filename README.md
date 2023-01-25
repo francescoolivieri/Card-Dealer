@@ -32,8 +32,8 @@ The game ends depending on which card game you're playing. In general the game w
 
 ## Project layout
 
-├── README.md
-├── CardDealer
+├── README.md  
+├── CardDealer   
 	├── Binaries                # Folder with executable file
     ├── Includes       
     ├── FreeRTOS                # FreeRTOS functions
