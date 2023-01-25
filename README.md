@@ -34,15 +34,15 @@ The game ends depending on which card game you're playing. In general the game w
 
 ├── README.md  
 ├── CardDealer   
-	├── Binaries                # Folder with executable file
-    ├── Includes       
-    ├── FreeRTOS                # FreeRTOS functions
-    ├── LcdDriver               #Libraries for LCD screen
-	├── Libraries 
-	│ 	├── DefaultLib
-	│ 	└── source files        # project funtions
-	│ 
-    └── main_freertos.c         # main with FSM states
+	├── Binaries                # Folder with executable file  
+    ├── Includes         
+    ├── FreeRTOS                # FreeRTOS functions  
+    ├── LcdDriver               #Libraries for LCD screen  
+	├── Libraries  
+	│ 	├── DefaultLib  
+	│ 	└── source files        # project funtions  
+	│   
+    └── main_freertos.c         # main with FSM states  
 
 ### Libraries folder
 Here we find DefaultLib and all the source files with the functions used in our project:
