@@ -172,13 +172,13 @@ void vTaskDistanceSensor(void *pvParameters)
                 }else{
                     count_out = 0;
 
-                    if(count > 8){
+                    if(count > 5){
                         giveOneCard();
 
                         if(getCardsLeft() == 0)
                             cardsRefill();
-                        else
-                            screen_card_distribution(g_sContext, get_number_player(), getCardsLeft());
+
+                        screen_card_distribution(g_sContext, get_number_player(), getCardsLeft());
                     }
 
                     count = 0;
@@ -281,6 +281,11 @@ void cardsRefill(){
 
     clearEvent();
     while (getEvent() != BUTTON1_PRESSED && getEvent() != BUTTON2_PRESSED) ;
+
+    Graphics_clearDisplay(&g_sContext);
+
+    if(getEvent() == BUTTON1_PRESSED)
+        cards_left = NUM_TOTAL_CARDS;
 }
 
 void giveOneCard(){
