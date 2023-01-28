@@ -7,6 +7,7 @@
 
 
 #include "screens.h"
+#include "task.h"
 
 void screen_start_game(Graphics_Context context){
 
@@ -55,7 +56,7 @@ void screen_card_distribution(Graphics_Context context, int n_people, int n_card
 
     Graphics_drawStringCentered(&context,(int8_t *) string, AUTO_STRING_LENGTH, 64, 30, OPAQUE_TEXT);
 
-    sprintf(string, "Cards left: %d/30", n_cards);
+    sprintf(string, "Cards left: %d/40", n_cards);
     Graphics_drawStringCentered(&context,(int8_t *) string, AUTO_STRING_LENGTH, 64, 50, OPAQUE_TEXT);
 }
 
@@ -71,6 +72,17 @@ void screen_continue(Graphics_Context context){
     Graphics_drawStringCentered(&context,(int8_t *)"Press", AUTO_STRING_LENGTH, 64, 50, OPAQUE_TEXT);
     Graphics_drawStringCentered(&context,(int8_t *)"Button1   =>", AUTO_STRING_LENGTH, 64, 60, OPAQUE_TEXT);
     Graphics_drawStringCentered(&context,(int8_t *)"to Start", AUTO_STRING_LENGTH, 64, 70, OPAQUE_TEXT);
+}
+
+void screen_cards_refill(Graphics_Context context){
+    Graphics_clearDisplay(&context);
+
+    Graphics_drawStringCentered(&context, (int8_t*) "OUT OF CARDS!",
+                                AUTO_STRING_LENGTH, 64, 40, OPAQUE_TEXT);
+    Graphics_drawStringCentered(&context, (int8_t*) "Refill the tank and", AUTO_STRING_LENGTH,
+                                64, 50, OPAQUE_TEXT);
+    Graphics_drawStringCentered(&context, (int8_t*) "Press Button1",
+                                AUTO_STRING_LENGTH, 64, 70, OPAQUE_TEXT);
 }
 
 

@@ -5,13 +5,9 @@
  *      Author: Francesco Olivieri
  */
 
-#include "card_dealer.h"
+#include <inizializations.h>
 
 /* ------ Init Functions ------  */
-
-void initCardDealer(){
-    _hwInit();
-}
 
 //adc initialization
 void _adcInit(){
@@ -32,9 +28,6 @@ void _adcInit(){
 
         ADC14_enableInterrupt(ADC_INT1);
 
-        Interrupt_enableInterrupt(INT_ADC14);
-        Interrupt_enableMaster();
-
         ADC14_enableSampleTimer(ADC_AUTOMATIC_ITERATION);
 
         ADC14_enableConversion();
@@ -53,20 +46,15 @@ void _graphicsInit()
     Graphics_initContext(&g_sContext, &g_sCrystalfontz128x128, &g_sCrystalfontz128x128_funcs);
     Graphics_setForegroundColor(&g_sContext, GRAPHICS_COLOR_WHITE);
     Graphics_setBackgroundColor(&g_sContext, GRAPHICS_COLOR_BLACK);
-    //GrContextFontSet(&g_sContext, &g_sFontFixed6x8);
-    //GrContextFontSet(&g_sContext, &g_sFontCmtt12);
-    GrContextFontSet(&g_sContext, &g_sFontCmsc12); //carino
-    //GrContextFontSet(&g_sContext, &g_sFontCmtt12);
 
-
-
+    GrContextFontSet(&g_sContext, &g_sFontCmsc12);
 
 
     Graphics_clearDisplay(&g_sContext);
 
 }
 
-void button_init(){
+void _buttonsInit(){
     //initialization button1 MKII
         GPIO_setAsInputPinWithPullUpResistor(GPIO_PORT_P3, GPIO_PIN5);
         GPIO_enableInterrupt(GPIO_PORT_P3, GPIO_PIN5);
@@ -81,9 +69,7 @@ void button_init(){
 
 }
 
-void initDispenserMotor(){
-    /* Stop watchdog timer */
-        WDT_A_holdTimer();
+void _DCMotorInit(){
 
     /* Configuring output */
     GPIO_setAsOutputPin(GPIO_PORT_P4, GPIO_PIN0);
@@ -101,6 +87,41 @@ void initDispenserMotor(){
     /* Starting the Timer_A0 in continuous mode */
        Timer_A_startCounter(TIMER_A1_BASE, TIMER_A_CONTINUOUS_MODE);
 
+}
+
+void _stepMotorInit()
+{
+    // set pins for Stepper Motor
+    GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN7);
+    GPIO_setAsOutputPin(GPIO_PORT_P5, GPIO_PIN0);
+    GPIO_setAsOutputPin(GPIO_PORT_P5, GPIO_PIN2);
+    GPIO_setAsOutputPin(GPIO_PORT_P3, GPIO_PIN6);
+}
+
+void _distanceSensorInit(){
+    // set pins for Distance Sensor
+    GPIO_setAsPeripheralModuleFunctionInputPin(GPIO_PORT_P2, GPIO_PIN4,
+    GPIO_PRIMARY_MODULE_FUNCTION);
+    GPIO_setAsOutputPin(GPIO_PORT_P5, GPIO_PIN6);
+
+    /* Starting the Timer32 needed to send trigger */
+    Timer32_initModule(TIMER32_0_BASE, TIMER32_PRESCALER_1, TIMER32_32BIT,
+                       TIMER32_PERIODIC_MODE); // uses MCLK
+    Timer32_disableInterrupt(TIMER32_0_BASE);
+    Timer32_setCount(TIMER32_0_BASE, 1);
+    Timer32_startTimer(TIMER32_0_BASE, true);
+
+    /* Configuring Capture Mode */
+    Timer_A_initCapture(TIMER_A0_BASE, &DS_captureModeConfig);
+
+    /* Configuring Continuous Mode */
+    Timer_A_configureContinuousMode(TIMER_A0_BASE, &DS_continuousModeConfig);
+
+    /* Starting the Timer_A0 in continuous mode */
+    Timer_A_startCounter(TIMER_A0_BASE, TIMER_A_CONTINUOUS_MODE);
+
+    /* Enabling interrupts */
+    Interrupt_enableInterrupt(INT_TA0_N);
 }
 
 void _hwInit()
@@ -125,28 +146,11 @@ void _hwInit()
 
     _adcInit();
     _graphicsInit();
-    button_init();
-    initDispenserMotor();
+    _buttonsInit();
+    _DCMotorInit();
+    _stepMotorInit();
+    _distanceSensorInit();
 
-    // set pins for Stepper Motor
-    GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN7);
-    GPIO_setAsOutputPin(GPIO_PORT_P5, GPIO_PIN0);
-    GPIO_setAsOutputPin(GPIO_PORT_P5, GPIO_PIN2);
-    GPIO_setAsOutputPin(GPIO_PORT_P3, GPIO_PIN6);
-
-    // set pins for Distance Sensor
-    GPIO_setAsPeripheralModuleFunctionInputPin(GPIO_PORT_P2, GPIO_PIN4,
-                                               GPIO_PRIMARY_MODULE_FUNCTION);
-    GPIO_setAsOutputPin(GPIO_PORT_P5, GPIO_PIN6);
-
-    /* Configuring Capture Mode */
-    Timer_A_initCapture(TIMER_A0_BASE, &DS_captureModeConfig);
-
-    /* Configuring Continuous Mode */
-    Timer_A_configureContinuousMode(TIMER_A0_BASE, &DS_continuousModeConfig);
-
-    /* Enabling interrupts */
-    Interrupt_enableInterrupt(INT_TA0_N);
     Interrupt_enableMaster();
 
 }
@@ -154,6 +158,10 @@ void _hwInit()
 
 /* ------- Interrupt Handlers ------- */
 
+static int meas1 = 0;
+static int meas2 = 0;
+static int meas1Count=0;
+static int rising;
 void TA0_N_IRQHandler(void)  // Timer Interrupt for distance sensor
 {
     rising  = 0;
@@ -163,25 +171,26 @@ void TA0_N_IRQHandler(void)  // Timer Interrupt for distance sensor
 
     if(P2IN&0x10) rising=1; else rising=0;
 
-    if(rising) // Start
+    if(rising) // Trigger sent
     {
         meas1 = Timer_A_getCaptureCompareCount(TIMER_A0_BASE, TIMER_A_CAPTURECOMPARE_REGISTER_1);
 
         meas1Count=1;
     }
-    else
+    else      // Echo received
     {
         meas2 = Timer_A_getCaptureCompareCount(TIMER_A0_BASE, TIMER_A_CAPTURECOMPARE_REGISTER_1);
+
         if (meas1Count==1){ //if meas1 has been collected
             meas1Count=0; //reset meas1 count
-            DS_valueReady(meas1, meas2);
+            DS_measureReady(meas1, meas2);
         }
     }
 }
 
 
 static uint16_t resultsBuffer[2];
-bool joystick_semaphore=true;
+static bool joystick_semaphore=true; // manage
 void ADC14_IRQHandler(void)    // Handler for joystick
 {
     uint64_t status;
@@ -189,7 +198,7 @@ void ADC14_IRQHandler(void)    // Handler for joystick
     status = ADC14_getEnabledInterruptStatus();
     ADC14_clearInterruptFlag(status);
 
-    if(status & ADC_INT1) // BOH
+    if(status & ADC_INT1)
     {
         resultsBuffer[1] = ADC14_getResult(ADC_MEM1);
 
@@ -206,20 +215,13 @@ void ADC14_IRQHandler(void)    // Handler for joystick
         if(resultsBuffer[1]<2000 && joystick_semaphore==true){
             joystick_down();
             joystick_semaphore=false;
-            }
+        }
 
     }
 
-    if(status & ADC_INT1){
-            resultsBuffer[1] = ADC14_getResult(ADC_MEM1);
-            if (!(P4IN & GPIO_PIN1)){
-                //joystick_press();
-            }
-
-        }
-
 }
 
+//handler button1
 void PORT3_IRQHandler(void)
 {
 
@@ -231,7 +233,7 @@ void PORT3_IRQHandler(void)
     }
 }
 
-//handler button1
+//handler button2
 void PORT5_IRQHandler(void)
 {
 
@@ -243,100 +245,28 @@ void PORT5_IRQHandler(void)
     }
 }
 
+/* ----- Distance Sensor Service Functions ----- */
+static bool DS_newVal = false;
+static int distCM = 0;
 
-/* -------- --------*/
-
-void makeStep(bool move_forward){
-    if(move_forward){
-        miglior_variabile_del_mondo_in_assoluto_best_in_town_bro_to_the_top_never_stop++;
-        miglior_variabile_del_mondo_in_assoluto_best_in_town_bro_to_the_top_never_stop = miglior_variabile_del_mondo_in_assoluto_best_in_town_bro_to_the_top_never_stop%4;
-     }else{
-        if(miglior_variabile_del_mondo_in_assoluto_best_in_town_bro_to_the_top_never_stop == 0)
-            miglior_variabile_del_mondo_in_assoluto_best_in_town_bro_to_the_top_never_stop = 3;
-        else
-            miglior_variabile_del_mondo_in_assoluto_best_in_town_bro_to_the_top_never_stop--;
-    }
-    //printf("%d\n", miglior_variabile_del_mondo_in_assoluto_best_in_town_bro_to_the_top_never_stop);
-    switch(miglior_variabile_del_mondo_in_assoluto_best_in_town_bro_to_the_top_never_stop){
-        case 0:
-            GPIO_setOutputHighOnPin(GPIO_PORT_P1, GPIO_PIN7);
-            GPIO_setOutputLowOnPin(GPIO_PORT_P5, GPIO_PIN0);
-            GPIO_setOutputLowOnPin(GPIO_PORT_P5, GPIO_PIN2);
-            GPIO_setOutputLowOnPin(GPIO_PORT_P3, GPIO_PIN6);
-
-            break;
-        case 1:
-            GPIO_setOutputLowOnPin(GPIO_PORT_P1, GPIO_PIN7);
-            GPIO_setOutputHighOnPin(GPIO_PORT_P5, GPIO_PIN0);
-            GPIO_setOutputLowOnPin(GPIO_PORT_P5, GPIO_PIN2);
-            GPIO_setOutputLowOnPin(GPIO_PORT_P3, GPIO_PIN6);
-
-            break;
-        case 2:
-            GPIO_setOutputLowOnPin(GPIO_PORT_P1, GPIO_PIN7);
-            GPIO_setOutputLowOnPin(GPIO_PORT_P5, GPIO_PIN0);
-            GPIO_setOutputHighOnPin(GPIO_PORT_P5, GPIO_PIN2);
-            GPIO_setOutputLowOnPin(GPIO_PORT_P3, GPIO_PIN6);
-
-            break;
-        case 3:
-            GPIO_setOutputLowOnPin(GPIO_PORT_P1, GPIO_PIN7);
-            GPIO_setOutputLowOnPin(GPIO_PORT_P5, GPIO_PIN0);
-            GPIO_setOutputLowOnPin(GPIO_PORT_P5, GPIO_PIN2);
-            GPIO_setOutputHighOnPin(GPIO_PORT_P3, GPIO_PIN6);
-
-            break;
-    }
-
-}
-
-
-void initTriggerDS(){
-    /* Starting the Timer32 */
-    Timer32_initModule(TIMER32_0_BASE, TIMER32_PRESCALER_1, TIMER32_32BIT, TIMER32_PERIODIC_MODE); // uses MCLK
-    Timer32_disableInterrupt(TIMER32_0_BASE);
-    Timer32_setCount(TIMER32_0_BASE, 1);
-    Timer32_startTimer(TIMER32_0_BASE, true);
-}
-
-void sendTrigPulseDS(){ // triggers Pin 5.6 for 1 us
-    GPIO_setOutputHighOnPin(GPIO_PORT_P5, GPIO_PIN6); // 5.6 trigger pin of distance sensor
-    Timer32_setCount(TIMER32_0_BASE, 24 * 10); // multiply by 24 -> 1 us * 10 -> 1 us
-    while (Timer32_getValue(TIMER32_0_BASE) > 0) // Wait 10us
-    GPIO_setOutputLowOnPin(GPIO_PORT_P5, GPIO_PIN6);
-}
-
-void startDelayCaptureDS(){
-    /* Starting the Timer_A0 in continuous mode for DS measuring*/
-    Timer_A_startCounter(TIMER_A0_BASE, TIMER_A_CONTINUOUS_MODE);
-}
-
-/* ----- Service Functions ----- */
-
-void DS_valueReady(int t1, int t2){
+void DS_measureReady(int t1, int t2){
     int diff = ((t2 - t1) & 0xFFFF);
     distCM = (diff / 3) / 58; // diff is time in ticks (1 tick is 1/3us) so by dividing diff/3 I find how much time has passed, then I know that the sound makes 1cm every 58us so I divide (timePassed)/58
 
-    DS_takeVal = true;
+    DS_newVal = true;
 }
 
-bool DS_isValueReady(){
-    return DS_takeVal;
+bool DS_hasNewMeasure(){
+    return DS_newVal;
 }
 
-int DS_getDistCM(){
+int DS_getMeasure(){
+    if(DS_newVal)  // become a "used measure"
+        DS_newVal = false;
     return distCM;
 }
 
-void DS_valueRead(){
-    DS_takeVal = false;
-}
-
-Graphics_Context getGraphicsContext(){
-    return g_sContext;
-}
-
-/* ----- Extra Features ----- */
+/* ----- Buzzer Functions ----- */
 
 void turnOnBuzzer(){
     Interrupt_disableInterrupt(INT_TA0_N);
@@ -371,19 +301,6 @@ void turnOffBuzzer(){
 
 }
 
-//the following are important functions (not extra)
-
-void turnOnDispenserForward(){
-    GPIO_setOutputHighOnPin(GPIO_PORT_P6, GPIO_PIN1);
-    GPIO_setOutputLowOnPin(GPIO_PORT_P4, GPIO_PIN0);
-}
-
-void turnOnDispenserBackward(){
-    GPIO_setOutputLowOnPin(GPIO_PORT_P6, GPIO_PIN1);
-    GPIO_setOutputHighOnPin(GPIO_PORT_P4, GPIO_PIN0);
-}
-
-void turnOffDispenser(){
-    GPIO_setOutputLowOnPin(GPIO_PORT_P4, GPIO_PIN0);
-    GPIO_setOutputLowOnPin(GPIO_PORT_P6, GPIO_PIN1);
+Graphics_Context getGraphicsContext(){
+    return g_sContext;
 }

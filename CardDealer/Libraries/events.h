@@ -9,6 +9,7 @@ typedef enum{
     END_ARRIVED,
     START_ARRIVED,
     GIVE_CARD,
+    CARDS_END,
     SKIP,
     PERSON_DETECTED,
     BUTTON1_PRESSED,

@@ -25,6 +25,7 @@ void screen_scanning(Graphics_Context context);
 void screen_selecting_cards(Graphics_Context context, int n_cards, int n_people);
 void screen_center_string(Graphics_Context context, char *string);
 void screen_card_distribution(Graphics_Context context, int n_people, int n_cards);
+void screen_cards_refill(Graphics_Context context);
 int get_number_player();
 void screen_continue(Graphics_Context context);
 

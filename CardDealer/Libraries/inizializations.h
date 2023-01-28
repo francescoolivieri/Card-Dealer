@@ -1,12 +1,5 @@
-/*
- * card_dealer.h
- *
- *  Created on: 5 gen 2023
- *      Author: Francesco Olivieri
- */
-
-#ifndef LIBRARIES_CARD_DEALER_H_
-#define LIBRARIES_CARD_DEALER_H_
+#ifndef LIBRARIES_INIZIALIZATIONS_H_
+#define LIBRARIES_INIZIALIZATIONS_H_
 
 #include <stdio.h>
 #include <ti/grlib/grlib.h>
@@ -64,50 +57,93 @@ static const Timer_A_CaptureModeConfig DS_captureModeConfig =
 Graphics_Context g_sContext;
 Graphics_Context getGraphicsContext();
 
-// Init Functions
-void initCardDealer();  // calls all the others
+/* -------- Init Functions -------- */
+
+/*
+ * Initializes pins and peripherals to
+ * handle the joystick
+ */
 void _adcInit();
+
+/*
+ * Initializes display and graphics content
+ */
 void _graphicsInit();
-void button_init();
-void initDispenserMotor();
-void giveOneCard();
+
+/*
+ * Initializes buttons B1 and B2 of MKII
+ */
+void _buttonsInit();
+
+/*
+ * Sets all the pins and timers needed to
+ *   manage the DC motor
+ */
+void _DCMotorInit();
+
+/*
+ * Initializes step motor pins
+ */
+void _stepMotorInit();
+
+/*
+ * Initializes step motor pins and timers
+ */
+void _distanceSensorInit();
+
+/*
+ * Calls all the others initializations
+ * */
 void _hwInit();
 
 
-// handlers
-static int meas1 = 0;
-static int meas2 = 0;
-static int meas1Count=0;
-static int rising;
-void TA0_N_IRQHandler(void);
-void ADC14_IRQHandler(void);
-void PORT3_IRQHandler(void);
-void PORT5_IRQHandler(void);
+/* -------- Handlers -------- */
+
+void TA0_N_IRQHandler(void);  // Handler for distance sensor measure
+
+void ADC14_IRQHandler(void);  // Joystick handler
+
+void PORT3_IRQHandler(void);  // B1 handler
+
+void PORT5_IRQHandler(void);  // B2 handler
 
 
-// Step Motor
-static int miglior_variabile_del_mondo_in_assoluto_best_in_town_bro_to_the_top_never_stop = 0;
-void makeStep(bool move_forward);
+/* -------- Handlers Utilities -------- */
+
+/*
+ * Notifies that the distance sensor has
+ * taken a new measure
+ *   t1 -> numbers of ticks on rising edge (trigger sended to sensor)
+ *   t2 -> numbers of ticks on falling edge (reply received from the sensor)
+ */
+static void DS_measureReady(int t1, int t2);
+
+/*
+ * Notify if there is available a measure
+ * that has never been read before
+ */
+bool DS_hasNewMeasure();
+
+/*
+ * Returns the last taken measure
+ * of the distance sensor
+ */
+int DS_getMeasure();
 
 
-// Distance sensor
-void initTriggerDS();
-void sendTrigPulseDS();
-void startDelayCaptureDS();
+/* -------- Buzzer -------- */
 
-// Dispenser Motor
-void turnOnDispenserForward();
-void turnOnDispenserBackward();
-void turnOffDispenser();
-
+/*
+ * Initialize timer TA0 and start the buzzer
+ */
 void turnOnBuzzer();
+
+/*
+ * Stops and initialize the timer TA0 for the
+ * distance sensor
+ *  (we "deinitialize" and initialize every time the
+ *  timer TA0 since both buzzer and distance sensor use it)
+ */
 void turnOffBuzzer();
 
-static bool DS_takeVal = false;
-static int distCM = 0;
-void DS_valueReady(int t1, int t2);
-bool DS_isValueReady();
-int DS_getDistCM();
-void DS_valueRead();
-
-#endif /* LIBRARIES_CARD_DEALER_H_ */
+#endif /* LIBRARIES_INIZIALIZATIONS_H_ */

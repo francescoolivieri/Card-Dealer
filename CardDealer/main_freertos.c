@@ -1,4 +1,4 @@
-#include "interfaces.h"
+#include <actions.h>
 
 void fn_IDLE();
 void fn_WAITING();
@@ -13,7 +13,7 @@ typedef enum{
     WAITING,
     SCAN,
     GAME_SELECTION,
-    CARD_DISTRIBUTION,
+    CARDS_DISTRIBUTION,
     GAME,
     EMERGENCY_STOP
 }State_t;
@@ -28,7 +28,7 @@ StateMachine_t fsm[]={
                       {WAITING, fn_WAITING},
                       {SCAN, fn_SCAN},
                       {GAME_SELECTION, fn_GAME_SELECTION},
-                      {CARD_DISTRIBUTION, fn_DISTRIBUTION},
+                      {CARDS_DISTRIBUTION, fn_DISTRIBUTION},
                       {GAME, fn_GAME},
                       {EMERGENCY_STOP, fn_EMERGENCY_STOP}
 };
@@ -68,13 +68,6 @@ int main(void)
      */
     return 0;
 }
-/*-----------------------------------------------------------*/
-
-/*---------SCREEN FUNCTIONS----------------*/
-
-
-
-
 
 /*-------------------------*/
 
@@ -89,10 +82,9 @@ void vTaskMain(void *pvParameters)
 }
 
 void fn_IDLE(){
-    initLibInterface();  // initialize peripherals, clocks, graphics, timers and adc
+    init();  // initialize peripherals, clocks, graphics, timers and adc
     g_sContext = getGraphicsContext();
 
-    //Interrupt_disableInterrupt(ADC14_IRQHandler);
     Interrupt_disableInterrupt(INT_ADC14);
 
     current_state = WAITING;
@@ -101,7 +93,6 @@ void fn_IDLE(){
 
 void fn_WAITING(){
     if(state_transition){
-
         screen_start_game(g_sContext);
 
         clearEvent();
@@ -125,14 +116,13 @@ void fn_SCAN(){
 }
 
 void fn_GAME_SELECTION(){
-    Interrupt_enableInterrupt(INT_ADC14);  // start detecting joystick movements
     gameSelection();
 
 
     if(getEvent() == BUTTON2_PRESSED)
             current_state = EMERGENCY_STOP;
     else
-            current_state = CARD_DISTRIBUTION;
+            current_state = CARDS_DISTRIBUTION;
     state_transition = true;
 }
 
