@@ -31,7 +31,7 @@ Once the 360 degress turn is completed youu will be prompted to card selections 
 At the end of the first card distribution the dealer will position itself in front of the first player, he can decide whether to ask for a card (Hand in front of distance sensor for ~1 sec) or skip to next person (holding the hand in front of distance sensor until the dealer moves). This can be done by each player when it's his turn.
 
 4. ### End game
-The game ends depending on which card game you're playing. In general the game will be ended where there's no cards left on the dealer, or you can decide to stop by pushing button B2 and the structure will return to its inital state
+The game ends depending on which card game you're playing. In general the game will be ended when there's no cards left on the dealer, or you can decide to stop by pushing button B2 and the structure will return to its inital state
 
 
 ## Project layout
