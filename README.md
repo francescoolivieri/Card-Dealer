@@ -7,15 +7,15 @@
  - Educational Boosterpack
  - 28BYJ-48 Step Motor (ULN2003 Driver)
  - HC-SR04 Distance Sensor
- - Dc Motor
+ - Dc Motor (L298N Driver)
  - Breadboard
  - Lego
  - Cardboard
  - Powerbank
 
 ## Links
-	-video:
-	-powerpoint:
+video: https://youtu.be/4cU7cmrplUQ  
+powerpoint: https://docs.google.com/presentation/d/1i0G2VViDwSeIPXIIWysBmuo2hVDScN2D/editusp=sharing&ouid=106265802200676387458&rtpof=true&sd=true
  
 ## How to play
 
