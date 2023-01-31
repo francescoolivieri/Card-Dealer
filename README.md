@@ -15,8 +15,8 @@
 
 ## Links
 video: https://youtu.be/4cU7cmrplUQ  
-powerpoint: https://docs.google.com/presentation/d/1i0G2VViDwSeIPXIIWysBmuo2hVDScN2D/editusp=sharing&ouid=106265802200676387458&rtpof=true&sd=true
- 
+powerpoint: https://docs.google.com/presentation/d/1i0G2VViDwSeIPXIIWysBmuo2hVDScN2D/edit?usp=sharing&ouid=106265802200676387458&rtpof=true&sd=true
+
 ## How to play
 
 The usage of this device is divided into different stages:
