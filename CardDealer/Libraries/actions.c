@@ -293,11 +293,11 @@ void giveOneCard(){
 
     if(getCardsLeft()>0){
         float scaleFactor = 1000000;
-        float spinForwardTime = 0.075;
-        float spinBackwardsTime = 0.05;
+        float spinForwardTime = 0.013;
+        float spinBackwardsTime = 0.01;
 
         /*wheel spins forward to give the card*/
-        Timer32_setCount(TIMER32_1_BASE, 24 * scaleFactor * spinForwardTime); // multiply by 24 -> 1 us *
+        Timer32_setCount(TIMER32_1_BASE, 24 * scaleFactor * spinForwardTime);
         DCM_moveForward();
         while (Timer32_getValue(TIMER32_1_BASE) > 0); // Wait 0.015sec
 
