@@ -28,7 +28,7 @@ void screen_card_distribution(Graphics_Context context, int n_people, int n_card
 void screen_cards_refill(Graphics_Context context);
 int get_number_player();
 void screen_continue(Graphics_Context context);
-
+void screen_restart(Graphics_Context context);
 
 
 
