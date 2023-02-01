@@ -45,7 +45,11 @@ The game ends depending on which card game you're playing. In general the game w
 │  ├── LcdDriver	#Libraries for LCD screen    
 │  ├── Libraries    
 │  	├── DefaultLib     
-│  	└── source files	# project funtions    
+│  	└── screen
+│  	└── inizialization  
+│  	└── events  
+│  	└── peripherals  
+│  	└── actions   
 │  	     
 └── main_freertos.c	# main with FSM states 
     
