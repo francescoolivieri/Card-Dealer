@@ -20,7 +20,7 @@ void peopleDetection(){
 
     // SETUP TASK STEP MOTOR
     stepParameter SM_param;
-    SM_param.forward = true;
+    SM_param.move_cclockwise = true;
     SM_param.steps = degreesToSteps(360);
     SM_param.mode = RECOGNITION_MODE;
 
@@ -40,6 +40,8 @@ void peopleDetection(){
     }
 
     while(getEvent() != END_ARRIVED && getEvent() != BUTTON2_PRESSED); // wait for end of scanning
+
+
 
 }
 
@@ -76,7 +78,7 @@ void distributeCards(){
 
         stepParameter SM_param;
         SM_param.steps = getHomeDistance() - getPeoplePosition(i); // distance from home pos - distance between home pos and the i-th person
-        SM_param.forward = false;
+        SM_param.move_cclockwise = false;
         SM_param.mode = GAME_MODE;
 
         vTaskStepMotor((void *)&SM_param);
@@ -107,7 +109,7 @@ void startGame(){
 
             stepParameter pv;
             pv.steps = getPeoplePosition(i) - getHomeDistance();
-            pv.forward = true;
+            pv.move_cclockwise = true;
             pv.mode = GAME_MODE;
 
             vTaskStepMotor((void *)&pv);
@@ -128,7 +130,7 @@ void vTaskDistanceSensor(void *pvParameters)
 {
     uart_println("Start TaskDistanceSensor.");
     int count = 0;
-    int count_out = 0;
+    int count_out = 0;      // variable used to handle random spikes given by the DS
     task_mode DS_mode = (*((task_mode *)pvParameters));
 
     while (1) {
@@ -137,7 +139,7 @@ void vTaskDistanceSensor(void *pvParameters)
 
         DS_sendTrigger();
         //vTaskDelay(HZ / 8);     // delay
-        vTaskDelay(pdMS_TO_TICKS(500));
+        vTaskDelay(pdMS_TO_TICKS(DS_SAMPLE_RATE)); // wait for the defined sample_rate
 
         if (DS_hasNewMeasure() == true)
         {
@@ -150,29 +152,28 @@ void vTaskDistanceSensor(void *pvParameters)
                 if(distCM<DS_MAX_DISTANCE_DETECT && distCM > 5){
                     count++;
 
-                    if(count == 4){
+                    if(count == dsMS_TO_SAMPLE(500)){
                         person_detected();
 
-                        vTaskDelay(pdMS_TO_TICKS(500));
                     }
                 }else{
                     count = 0;
                 }
             }else if(DS_mode == GAME_MODE){ // game mode
-                if((distCM<DS_MAX_DISTANCE_DETECT && distCM>=5) || count_out < 1){ // had to do this due to sensor inaccuracy
+                if((distCM<DS_MAX_DISTANCE_DETECT && distCM>=5) || count_out < 1){ // if I sample only one value out of bound I keep going since it may be an error of the sensor
                     if(distCM < DS_MAX_DISTANCE_DETECT)
                         count++;
                     else
                         count_out++;
 
 
-                    if(count == 24){
+                    if(count == dsMS_TO_SAMPLE(1500)){   // hand in front of sensor for 1.5 sec -> skip
                         skip();
                     }
                 }else{
                     count_out = 0;
 
-                    if(count > 5){
+                    if(count > dsMS_TO_SAMPLE(500)){ // hand in front of sensor for AT LEAST 0.5 sec -> give_card
                         giveOneCard();
 
                         if(getCardsLeft() == 0)
@@ -196,17 +197,17 @@ void vTaskStepMotor(void *pvParameters)
 {
     stepParameter pv = (*((stepParameter *)pvParameters));
     int cont = 0;
-    //uart_println("Start TaskStepperMotor.");
 
-    int velocity = 300000;
+    uart_println("Start TaskStepperMotor.");
+
     while (cont < pv.steps && (getEvent()!=BUTTON2_PRESSED || pv.mode == STOP_MODE))
     {
-        SM_makeStep(pv.forward);
+        SM_makeStep(pv.move_cclockwise);
 
-        vTaskDelay(HZ / velocity);     // delay
+        vTaskDelay(pdMS_TO_TICKS(10));     // delay
         cont++;
 
-        if(pv.forward)
+        if(pv.move_cclockwise)
             updateHomePosition(1);
         else
             updateHomePosition(-1);
@@ -218,7 +219,7 @@ void vTaskStepMotor(void *pvParameters)
 
                 vTaskSuspend(xTaskXHandle);
                 turnOnBuzzer();
-                vTaskDelay(pdMS_TO_TICKS(25000));  // buzz for that time
+                vTaskDelay(pdMS_TO_TICKS(1000));  // buzz for that time
                 turnOffBuzzer();
                 vTaskResume(xTaskXHandle);
             }
@@ -257,7 +258,7 @@ void resetPosition(){
 
     stepParameter pv;
      pv.steps = getHomeDistance();
-     pv.forward = false;
+     pv.move_cclockwise = false;
      pv.mode = STOP_MODE;
 
 
@@ -309,7 +310,7 @@ void giveOneCard(){
         DCM_turnOff();
 
         cardRemoved();
-        vTaskDelay(pdMS_TO_TICKS(5000));
+        vTaskDelay(pdMS_TO_TICKS(500));
     }else{
         button2_press();
     }

@@ -109,10 +109,15 @@ void fn_WAITING(){
 void fn_SCAN(){
     peopleDetection();
 
-    if(getEvent() == BUTTON2_PRESSED)
+    if(getPeopleNumber() == 0){
+        screen_restart(g_sContext);
+        resetPosition();
+        current_state = WAITING;
+    }else if(getEvent() == BUTTON2_PRESSED){
         current_state = EMERGENCY_STOP;
-    else
+    }else{
         current_state = GAME_SELECTION;
+    }
 }
 
 void fn_GAME_SELECTION(){

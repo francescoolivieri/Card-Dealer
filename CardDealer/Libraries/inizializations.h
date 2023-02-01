@@ -24,7 +24,7 @@ TIMER_A_CAPTURECOMPARE_REGISTER_4,          // Use CCR3
 
 /* Timer_A Up Configuration Parameter */
 static const Timer_A_UpModeConfig BZ_upConfig = {
-TIMER_A_CLOCKSOURCE_SMCLK,                      // SMCLK = 3 MhZ
+        TIMER_A_CLOCKSOURCE_SMCLK,                      // SMCLK = 3 MhZ
         TIMER_A_CLOCKSOURCE_DIVIDER_12,         // SMCLK/12 = 250 KhZ
         20000,                                  // 40 ms tick period
         TIMER_A_TAIE_INTERRUPT_DISABLE,         // Disable Timer interrupt

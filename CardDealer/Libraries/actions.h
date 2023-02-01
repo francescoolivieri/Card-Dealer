@@ -66,7 +66,7 @@ typedef enum{
  * about direction, number of steps and mode
  */
 typedef struct stepParameter{
-    bool forward;
+    bool move_cclockwise;
     int steps;
     task_mode mode;
 }stepParameter;
@@ -85,6 +85,9 @@ void vTaskStepMotor(void *pvParameters);
 /* -- Distance Sensor -- */
 
 #define DS_MAX_DISTANCE_DETECT 20 // cm
+#define DS_SAMPLE_RATE 125 // ms
+
+#define dsMS_TO_SAMPLE( xTimeInMs ) ( xTimeInMs/DS_SAMPLE_RATE )   // return the number of sample taken in xTimeInMs
 
 /*
  *  Function that is responsible for Distance Sensor measurements

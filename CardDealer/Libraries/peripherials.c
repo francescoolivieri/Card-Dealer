@@ -3,8 +3,8 @@
 /* ---------- Step Motor ---------- */
 
 static int step_count = 0;
-void SM_makeStep(bool move_forward){
-    if(move_forward){
+void SM_makeStep(bool move_cclockwise){
+    if(move_cclockwise){
         step_count++;
         step_count = step_count%4;
      }else{
